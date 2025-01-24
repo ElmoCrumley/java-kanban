@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    private ArrayList<String> subTasksList;
+    private ArrayList<String> subTasksList = new ArrayList<>();
     int backlogLevel = 0;
 
     public Epic(String name, String description) {
