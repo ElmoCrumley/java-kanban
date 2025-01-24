@@ -114,6 +114,11 @@ public class TaskManager {
         subTasks.put(subTask.getId(), subTask);
         if (subTask.getStatus().equals(Status.NEW)) {
             subTask.setStatus(Status.IN_PROGRESS.name());
+            for (Epic epic : epics.values()) {
+                if (epic.getName().equals(subTask.getEpicsName())) {
+                    epic.setStatus(Status.IN_PROGRESS.name());
+                }
+            }
         } else if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
             subTask.setStatus(Status.DONE.name());
             for (Epic epic : epics.values()) {
