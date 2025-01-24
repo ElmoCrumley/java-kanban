@@ -28,6 +28,10 @@ public class Task {
         this.status = status;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -53,6 +57,5 @@ public class Task {
         }
         return hash;
     }
-
 }
 

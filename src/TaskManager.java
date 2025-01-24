@@ -7,29 +7,29 @@ public class TaskManager {
     HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     // Получение списка всех задач.
-    public ArrayList<Task> getTasksList() {
-        ArrayList<Task> tasksList = new ArrayList<>();
+    public ArrayList<String> getTasksList() {
+        ArrayList<String> tasksList = new ArrayList<>();
 
         for (Task task : tasks.values()) {
-            tasksList.add(task);
+            tasksList.add(task.getName());
         }
         return tasksList;
     }
 
-    public ArrayList<Epic> getEpicsList() {
-        ArrayList<Epic> epicsList = new ArrayList<>();
+    public ArrayList<String> getEpicsList() {
+        ArrayList<String> epicsList = new ArrayList<>();
 
         for (Epic epic : epics.values()) {
-            epicsList.add(epic);
+            epicsList.add(epic.getName());
         }
         return epicsList;
     }
 
-    public ArrayList<SubTask> getSubTasksList() {
-        ArrayList<SubTask> subTasksList = new ArrayList<>();
+    public ArrayList<String> getSubTasksList() {
+        ArrayList<String> subTasksList = new ArrayList<>();
 
         for (SubTask subTask : subTasks.values()) {
-            subTasksList.add(subTask);
+            subTasksList.add(subTask.getName());
         }
         return subTasksList;
     }
@@ -69,22 +69,28 @@ public class TaskManager {
     // Создание.
     public void createTask (Task task) {
         int id = task.hashCode();
+
+        task.setId(id);
         tasks.put(id, task);
     }
 
     public void createEpic (Epic epic) {
         int id = epic.hashCode();
+
+        epic.setId(id);
         epics.put(id, epic);
     }
 
     public void createSubTask (SubTask subTask, String epicsName) {
         int id = subTask.hashCode();
 
+        subTask.setId(id);
         subTasks.put(id, subTask);
         subTask.setEpicsName(epicsName);
+
         for (Epic epic : epics.values()) {
             if (epic.getName().equals(epicsName)) {
-                epic.getSubTasksList().add(subTask.getName());
+                epic.setSubtaskToList(subTask.getName());
                 epic.backlogLevel++;
             }
         }
@@ -136,6 +142,6 @@ public class TaskManager {
 
     // Получение списка всех подзадач определённого эпика.
     public ArrayList<String> getEpicsSubTasksList(Epic epic) {
-        return epic.getSubTasksList();
+        return epic.getEpicsSubTasksList();
     }
 }

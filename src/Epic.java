@@ -9,7 +9,11 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public ArrayList<String> getSubTasksList() {
+    public ArrayList<String> getEpicsSubTasksList() {
         return subTasksList;
+    }
+
+    public void setSubtaskToList(String subTaskName) {
+        subTasksList.add(subTaskName);
     }
 }
