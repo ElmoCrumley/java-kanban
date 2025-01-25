@@ -98,34 +98,34 @@ public class TaskManager {
 
     // Обновление.
     public void updateTask(Task task) {
-        tasks.put(task.getId(), task);
-        if (task.getStatus().equals(Status.NEW)) {
+        if (task.getStatus().equals("NEW")) {
             task.setStatus(Status.IN_PROGRESS.name());
-        } else if (task.getStatus().equals(Status.IN_PROGRESS)) {
+            tasks.put(task.getId(), task);
+        } else if (task.getStatus().equals("IN_PROGRESS")) {
             task.setStatus(Status.DONE.name());
+            tasks.put(task.getId(), task);
         }
     }
 
-    public void updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-    }
-
     public void updateSubTask(SubTask subTask) {
-        subTasks.put(subTask.getId(), subTask);
-        if (subTask.getStatus().equals(Status.NEW)) {
+        if (subTask.getStatus().equals("NEW")) {
             subTask.setStatus(Status.IN_PROGRESS.name());
+            subTasks.put(subTask.getId(), subTask);
             for (Epic epic : epics.values()) {
                 if (epic.getName().equals(subTask.getEpicsName())) {
                     epic.setStatus(Status.IN_PROGRESS.name());
+                    epics.put(epic.getId(), epic);
                 }
             }
-        } else if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
+        } else if (subTask.getStatus().equals("IN_PROGRESS")) {
             subTask.setStatus(Status.DONE.name());
+            subTasks.put(subTask.getId(), subTask);
             for (Epic epic : epics.values()) {
                 if (subTask.getEpicsName().equals(epic.getName())) {
                     epic.backlogLevel--;
                     if (epic.backlogLevel == 0) {
                         epic.setStatus(Status.DONE.name());
+                        epics.put(epic.getId(), epic);
                     }
                 }
             }

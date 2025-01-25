@@ -24,5 +24,59 @@ public class Main {
         System.out.println(taskManager.getTasksList());
         System.out.println(taskManager.getEpicsList());
         System.out.println(taskManager.getSubTasksList());
+
+        System.out.println();
+        System.out.println("Задача 1.");
+        System.out.println(task1.getStatus());
+        taskManager.updateTask(task1);
+        System.out.println(task1.getStatus());
+        taskManager.updateTask(task1);
+        System.out.println(task1.getStatus());
+
+        System.out.println();
+        System.out.println("Задача 2.");
+        System.out.println(task2.getStatus());
+        taskManager.updateTask(task2);
+        System.out.println(task2.getStatus());
+        taskManager.updateTask(task2);
+        System.out.println(task2.getStatus());
+
+        System.out.println();
+        System.out.println("Эпик 1.");
+        System.out.println(epic1.getStatus());
+
+        System.out.println();
+        System.out.println("Подзадача 1.");
+        System.out.println(subTask1point1.getStatus());
+        taskManager.updateSubTask(subTask1point1);
+        System.out.println(subTask1point1.getStatus());
+        taskManager.updateSubTask(subTask1point1);
+        System.out.println(subTask1point1.getStatus());
+        System.out.println("Статус эпика 1:");
+        System.out.println(epic1.getStatus());
+
+        System.out.println();
+        System.out.println("Подзадача 2.");
+        System.out.println(subTask1point2.getStatus());
+        taskManager.updateSubTask(subTask1point2);
+        System.out.println(subTask1point2.getStatus());
+        taskManager.updateSubTask(subTask1point2);
+        System.out.println(subTask1point2.getStatus());
+        System.out.println("Статус эпика 1:");
+        System.out.println(epic1.getStatus());
+
+        System.out.println();
+        System.out.println("Эпик 2.");
+        System.out.println(epic2.getStatus());
+
+        System.out.println();
+        System.out.println("Подзадача 1.");
+        System.out.println(subTask2.getStatus());
+        taskManager.updateSubTask(subTask2);
+        System.out.println(subTask2.getStatus());
+        taskManager.updateSubTask(subTask2);
+        System.out.println(subTask2.getStatus());
+        System.out.println("Статус эпика 2:");
+        System.out.println(epic2.getStatus());
     }
 }
