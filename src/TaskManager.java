@@ -138,10 +138,23 @@ public class TaskManager {
     }
 
     public void removeEpic(int id) {
+        for (String epicsSubTaskName : epics.get(id).getEpicsSubTasksList()) {
+            for (SubTask subTask : subTasks.values()) {
+                if (subTask.getName().equals(epicsSubTaskName)) {
+                    subTasks.remove(subTask.getId());
+                    break;
+                }
+            }
+        }
         epics.remove(id);
     }
 
     public void removeSubTask(int id) {
+        for (Epic epic : epics.values()) {
+            if (subTasks.get(id).getEpicsName().equals(epic.getName())) {
+                epic.getEpicsSubTasksList().remove(subTasks.get(id).getEpicsName());
+            }
+        }
         subTasks.remove(id);
     }
 
