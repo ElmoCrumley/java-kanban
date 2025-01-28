@@ -12,6 +12,7 @@ public class TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
+    private int id = hashCode();
 
     // Получение списка всех задач.
     public ArrayList<Task> getTasksList() {
@@ -74,22 +75,25 @@ public class TaskManager {
 
     // Создание.
     public void createTask (Task task) {
-        int id = task.hashCode();
+        int id = this.id++;
 
+        this.id++;
         task.setId(id);
         tasks.put(id, task);
     }
 
     public void createEpic (Epic epic) {
-        int id = epic.hashCode();
+        int id = this.id++;
 
+        this.id++;
         epic.setId(id);
         epics.put(id, epic);
     }
 
     public void createSubTask (SubTask subTask, String epicsName) {
-        int id = subTask.hashCode();
+        int id = this.id++;
 
+        this.id++;
         subTask.setId(id);
         subTasks.put(id, subTask);
         subTask.setEpicsName(epicsName);
