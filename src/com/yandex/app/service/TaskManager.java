@@ -43,21 +43,20 @@ public class TaskManager {
 
     // Удаление всех задач.
     public void removeTasks() {
-        for (int key : tasks.keySet()) {
-            tasks.remove(key);
-        }
+        tasks.clear();
     }
 
     public void removeEpics() {
-        for (int key : epics.keySet()) {
-            epics.remove(key);
-        }
+            epics.clear();
+            subTasks.clear();
     }
 
     public void removeSubTasks() {
-        for (int key : subTasks.keySet()) {
-            subTasks.remove(key);
-        }
+            subTasks.clear();
+            for (Epic epic : epics.values()) {
+                epic.getEpicsSubTasksList().clear();
+                epic.setStatus(Status.NEW.name());
+            }
     }
 
     // Получение по идентификатору.
