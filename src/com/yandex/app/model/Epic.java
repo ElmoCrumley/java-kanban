@@ -1,9 +1,11 @@
+package com.yandex.app.model;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private final ArrayList<String> subTasksList = new ArrayList<>();
-    int backlogLevel = 0;
+    public int backlogLevel = 0;
 
     public Epic(String name, String description) {
         super(name, description);

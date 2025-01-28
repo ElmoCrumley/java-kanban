@@ -1,3 +1,7 @@
+package com.yandex.app.model;
+
+import com.yandex.app.service.Status;
+
 import java.util.Objects;
 
 public class Task {
