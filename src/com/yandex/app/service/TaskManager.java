@@ -14,29 +14,29 @@ public class TaskManager {
     private Map<Integer, SubTask> subTasks = new HashMap<>();
 
     // Получение списка всех задач.
-    public ArrayList<String> getTasksList() {
-        ArrayList<String> tasksList = new ArrayList<>();
+    public ArrayList<Task> getTasksList() {
+        ArrayList<Task> tasksList = new ArrayList<>();
 
         for (Task task : tasks.values()) {
-            tasksList.add(task.getName());
+            tasksList.add(task);
         }
         return tasksList;
     }
 
-    public ArrayList<String> getEpicsList() {
-        ArrayList<String> epicsList = new ArrayList<>();
+    public ArrayList<Epic> getEpicsList() {
+        ArrayList<Epic> epicsList = new ArrayList<>();
 
         for (Epic epic : epics.values()) {
-            epicsList.add(epic.getName());
+            epicsList.add(epic);
         }
         return epicsList;
     }
 
-    public ArrayList<String> getSubTasksList() {
-        ArrayList<String> subTasksList = new ArrayList<>();
+    public ArrayList<SubTask> getSubTasksList() {
+        ArrayList<SubTask> subTasksList = new ArrayList<>();
 
         for (SubTask subTask : subTasks.values()) {
-            subTasksList.add(subTask.getName());
+            subTasksList.add(subTask);
         }
         return subTasksList;
     }
