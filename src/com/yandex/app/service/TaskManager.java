@@ -100,8 +100,8 @@ public class TaskManager {
 
         for (Epic epic : epics.values()) {
             if (epic.getName().equals(epicsName)) {
-                epic.setSubtaskToList(subTask.getName());
-                epic.backlogLevel++;
+                epic.setSubTaskToList(subTask);
+                epic.setStatus("IN_PROGRESS");
             }
         }
     }
@@ -132,8 +132,7 @@ public class TaskManager {
             subTasks.put(subTask.getId(), subTask);
             for (Epic epic : epics.values()) {
                 if (subTask.getEpicsName().equals(epic.getName())) {
-                    epic.backlogLevel--;
-                    if (epic.backlogLevel == 0) {
+                    if (epic.getEpicsSubTasksList() == null) {
                         epic.setStatus(Status.DONE.name());
                         epics.put(epic.getId(), epic);
                     }
@@ -148,28 +147,21 @@ public class TaskManager {
     }
 
     public void removeEpic(int id) {
-        for (String epicsSubTaskName : epics.get(id).getEpicsSubTasksList()) {
-            for (SubTask subTask : subTasks.values()) {
-                if (subTask.getName().equals(epicsSubTaskName)) {
-                    subTasks.remove(subTask.getId());
-                    break;
-                }
-            }
-        }
+        epics.get(id).getEpicsSubTasksList().clear();
         epics.remove(id);
     }
 
     public void removeSubTask(int id) {
         for (Epic epic : epics.values()) {
             if (subTasks.get(id).getEpicsName().equals(epic.getName())) {
-                epic.getEpicsSubTasksList().remove(subTasks.get(id).getEpicsName());
+                epic.getEpicsSubTasksList().remove(subTasks.get(id));
             }
         }
         subTasks.remove(id);
     }
 
     // Получение списка всех подзадач определённого эпика.
-    public ArrayList<String> getEpicsSubTasksList(Epic epic) {
+    public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
         return epic.getEpicsSubTasksList();
     }
 }
