@@ -55,7 +55,7 @@ public class TaskManager {
     public void removeSubTasks() {
             subTasks.clear();
             for (Epic epic : epics.values()) {
-                epic.getEpicsSubTasksList().clear();
+                epic.getSubTasksList().clear();
                 epic.setStatus(Status.NEW.name());
             }
     }
@@ -115,7 +115,7 @@ public class TaskManager {
         for (Epic epic : epics.values()) {
             if (epic.getName().equals(subTask.getEpicsName())) {
                 epic.setStatus(Status.IN_PROGRESS.name());
-                for (SubTask subTaskInList : epic.getEpicsSubTasksList()) {
+                for (SubTask subTaskInList : epic.getSubTasksList()) {
                     if (subTaskInList.equals(subTask)) {
                         subTaskInList = subTask;
                         break;
@@ -133,14 +133,16 @@ public class TaskManager {
     }
 
     public void removeEpic(int id) {
-        epics.get(id).getEpicsSubTasksList().clear();
+        for (SubTask subTask : epics.get(id).getSubTasksList()) {
+            subTasks.remove(subTask.getId());
+        }
         epics.remove(id);
     }
 
     public void removeSubTask(int id) {
         for (Epic epic : epics.values()) {
             if (subTasks.get(id).getEpicsName().equals(epic.getName())) {
-                epic.getEpicsSubTasksList().remove(subTasks.get(id));
+                epic.getSubTasksList().remove(subTasks.get(id));
             }
         }
         subTasks.remove(id);
@@ -148,6 +150,6 @@ public class TaskManager {
 
     // Получение списка всех подзадач определённого эпика.
     public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
-        return epic.getEpicsSubTasksList();
+        return epic.getSubTasksList();
     }
 }

@@ -10,7 +10,7 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public ArrayList<SubTask> getEpicsSubTasksList() {
+    public ArrayList<SubTask> getSubTasksList() {
         return subTasksList;
     }
 
