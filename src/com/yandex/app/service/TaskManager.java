@@ -107,38 +107,27 @@ public class TaskManager {
     }
 
     // Обновление.
-    public void updateTask(Task task) {
-        if (task.getStatus().equals("NEW")) {
-            task.setStatus(Status.IN_PROGRESS.name());
-            tasks.put(task.getId(), task);
-        } else if (task.getStatus().equals("IN_PROGRESS")) {
-            task.setStatus(Status.DONE.name());
-            tasks.put(task.getId(), task);
-        }
+    public void updateTask(Task task, Object status) {
+        task.setStatus(status);
+        tasks.put(task.getId(), task);
     }
 
-    public void updateSubTask(SubTask subTask) {
-        if (subTask.getStatus().equals("NEW")) {
-            subTask.setStatus(Status.IN_PROGRESS.name());
-            subTasks.put(subTask.getId(), subTask);
-            for (Epic epic : epics.values()) {
-                if (epic.getName().equals(subTask.getEpicsName())) {
-                    epic.setStatus(Status.IN_PROGRESS.name());
-                    epics.put(epic.getId(), epic);
-                }
-            }
-        } else if (subTask.getStatus().equals("IN_PROGRESS")) {
-            subTask.setStatus(Status.DONE.name());
-            subTasks.put(subTask.getId(), subTask);
-            for (Epic epic : epics.values()) {
-                if (subTask.getEpicsName().equals(epic.getName())) {
-                    if (epic.getEpicsSubTasksList() == null) {
-                        epic.setStatus(Status.DONE.name());
-                        epics.put(epic.getId(), epic);
+    public void updateSubTask(SubTask subTask, Object status) {
+        subTask.setStatus(status);
+
+        for (Epic epic : epics.values()) {
+            if (epic.getName().equals(subTask.getEpicsName())) {
+                epic.setStatus(Status.IN_PROGRESS.name());
+                for (SubTask subTaskInList : epic.getEpicsSubTasksList()) {
+                    if (subTaskInList.equals(subTask)) {
+                        subTaskInList = subTask;
+                        break;
                     }
                 }
             }
         }
+
+        subTasks.put(subTask.getId(), subTask);
     }
 
     // Удаление по идентификатору.
