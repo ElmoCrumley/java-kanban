@@ -107,14 +107,11 @@ public class TaskManager {
     }
 
     // Обновление.
-    public void updateTask(Task task, Object status) {
-        task.setStatus(status);
+    public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
-    public void updateSubTask(SubTask subTask, Object status) {
-        subTask.setStatus(status);
-
+    public void updateSubTask(SubTask subTask) {
         for (Epic epic : epics.values()) {
             if (epic.getName().equals(subTask.getEpicsName())) {
                 epic.setStatus(Status.IN_PROGRESS.name());

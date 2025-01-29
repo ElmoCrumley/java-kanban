@@ -3,7 +3,6 @@ package com.yandex.app;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-import com.yandex.app.service.Status;
 import com.yandex.app.service.TaskManager;
 
 public class Main {
@@ -36,17 +35,17 @@ public class Main {
         System.out.println();
         System.out.println("Задача 1.");
         System.out.println(task1.getStatus());
-        taskManager.updateTask(task1, Status.IN_PROGRESS);
+        taskManager.updateTask(task1);
         System.out.println(task1.getStatus());
-        taskManager.updateTask(task1, Status.DONE);
+        taskManager.updateTask(task1);
         System.out.println(task1.getStatus());
 
         System.out.println();
         System.out.println("Задача 2.");
         System.out.println(task2.getStatus());
-        taskManager.updateTask(task2, Status.IN_PROGRESS);
+        taskManager.updateTask(task2);
         System.out.println(task2.getStatus());
-        taskManager.updateTask(task2, Status.DONE);
+        taskManager.updateTask(task2);
         System.out.println(task2.getStatus());
 
         System.out.println();
@@ -56,9 +55,9 @@ public class Main {
         System.out.println();
         System.out.println("Подзадача 1 эпика 1.");
         System.out.println(subTask1point1.getStatus());
-        taskManager.updateSubTask(subTask1point1, Status.IN_PROGRESS);
+        taskManager.updateSubTask(subTask1point1);
         System.out.println(subTask1point1.getStatus());
-        taskManager.updateSubTask(subTask1point1, Status.DONE);
+        taskManager.updateSubTask(subTask1point1);
         System.out.println(subTask1point1.getStatus());
         System.out.println("Статус эпика 1:");
         System.out.println(epic1.getStatus());
@@ -66,9 +65,9 @@ public class Main {
         System.out.println();
         System.out.println("Подзадача 2 эпика 1.");
         System.out.println(subTask1point2.getStatus());
-        taskManager.updateSubTask(subTask1point2, Status.IN_PROGRESS);
+        taskManager.updateSubTask(subTask1point2);
         System.out.println(subTask1point2.getStatus());
-        taskManager.updateSubTask(subTask1point2, Status.DONE);
+        taskManager.updateSubTask(subTask1point2);
         System.out.println(subTask1point2.getStatus());
         System.out.println("Статус эпика 1:");
         System.out.println(epic1.getStatus());
@@ -80,9 +79,9 @@ public class Main {
         System.out.println();
         System.out.println("Подзадача 1 эпика 2 .");
         System.out.println(subTask2.getStatus());
-        taskManager.updateSubTask(subTask2, Status.IN_PROGRESS);
+        taskManager.updateSubTask(subTask2);
         System.out.println(subTask2.getStatus());
-        taskManager.updateSubTask(subTask2, Status.DONE);
+        taskManager.updateSubTask(subTask2);
         System.out.println(subTask2.getStatus());
         System.out.println("Статус эпика 2:");
         System.out.println(epic2.getStatus());
