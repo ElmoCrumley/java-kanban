@@ -2,17 +2,17 @@ package com.yandex.app.model;
 
 public class SubTask extends Task {
 
-    private String epicsName;
+    private int epicsId;
 
     public SubTask(String name, String description) {
         super(name, description);
     }
 
-    public String getEpicsName() {
-        return epicsName;
+    public int getEpicsId() {
+        return epicsId;
     }
 
-    public void setEpicsName(String epicsName) {
-        this.epicsName = epicsName;
+    public void setEpicsId(int epicsId) {
+        this.epicsId = epicsId;
     }
 }

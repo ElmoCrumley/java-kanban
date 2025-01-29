@@ -90,16 +90,16 @@ public class TaskManager {
         epics.put(id, epic);
     }
 
-    public void createSubTask (SubTask subTask, String epicsName) {
+    public void createSubTask (SubTask subTask, int epicsId) {
         int id = this.id++;
 
         this.id++;
         subTask.setId(id);
         subTasks.put(id, subTask);
-        subTask.setEpicsName(epicsName);
+        subTask.setEpicsId(epicsId);
 
         for (Epic epic : epics.values()) {
-            if (epic.getName().equals(epicsName)) {
+            if (epic.getId() == epicsId) {
                 epic.setSubTaskToList(subTask);
                 epic.setStatus("IN_PROGRESS");
             }
@@ -113,7 +113,7 @@ public class TaskManager {
 
     public void updateSubTask(SubTask subTask) {
         for (Epic epic : epics.values()) {
-            if (epic.getName().equals(subTask.getEpicsName())) {
+            if (epic.getId() == subTask.getEpicsId()) {
                 epic.setStatus(Status.IN_PROGRESS.name());
                 for (SubTask subTaskInList : epic.getSubTasksList()) {
                     if (subTaskInList.equals(subTask)) {
@@ -141,7 +141,7 @@ public class TaskManager {
 
     public void removeSubTask(int id) {
         for (Epic epic : epics.values()) {
-            if (subTasks.get(id).getEpicsName().equals(epic.getName())) {
+            if (subTasks.get(id).getEpicsId() == epic.getId()) {
                 epic.getSubTasksList().remove(subTasks.get(id));
             }
         }

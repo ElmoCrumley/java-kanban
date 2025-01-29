@@ -20,13 +20,13 @@ public class Main {
         SubTask subTask1point1 = new SubTask("Подзадача 1 эпика 1.", "Описание подзадачи.");
         SubTask subTask1point2 = new SubTask("Подзадача 2 эпика 1.", "Описание подзадачи.");
         taskManager.createEpic(epic1);
-        taskManager.createSubTask(subTask1point1, "Эпик 1.");
-        taskManager.createSubTask(subTask1point2, "Эпик 1.");
+        taskManager.createSubTask(subTask1point1, epic1.getId());
+        taskManager.createSubTask(subTask1point2, epic1.getId());
 
         Epic epic2 = new Epic("Эпик 2.", "Описание эпика.");
         SubTask subTask2 = new SubTask("Подзадача 1 эпика 2.", "Описание подзадачи.");
         taskManager.createEpic(epic2);
-        taskManager.createSubTask(subTask2, "Эпик 2.");
+        taskManager.createSubTask(subTask2, epic2.getId());
 
         System.out.println(taskManager.getTasksList());
         System.out.println(taskManager.getEpicsList());
