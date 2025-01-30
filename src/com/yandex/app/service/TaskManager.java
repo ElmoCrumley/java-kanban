@@ -115,15 +115,12 @@ public class TaskManager {
     }
 
     public void updateSubTask(SubTask subTask) {
-        for (Epic epic : epics.values()) {
-            if (epic.getId() == subTask.getEpicsId()) {
-                epic.setStatus(Status.IN_PROGRESS.name());
-                for (SubTask subTaskInList : epic.getSubTasksList()) {
-                    if (subTaskInList.equals(subTask)) {
-                        subTaskInList = subTask;
-                        break;
-                    }
-                }
+        epics.get(subTask.getEpicsId()).setStatus(Status.IN_PROGRESS.name());
+
+        for (SubTask subTaskInList : epics.get(subTask.getEpicsId()).getSubTasksList()) {
+            if (subTaskInList.equals(subTask)) {
+                subTaskInList = subTask;
+                break;
             }
         }
 
