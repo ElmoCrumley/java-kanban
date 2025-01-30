@@ -103,7 +103,7 @@ public class TaskManager {
 
         for (Epic epic : epics.values()) {
             if (epic.getId() == epicsId) {
-                epic.setSubTaskToList(subTask);
+                epic.addSubTaskToList(subTask);
                 epic.setStatus("IN_PROGRESS");
             }
         }
