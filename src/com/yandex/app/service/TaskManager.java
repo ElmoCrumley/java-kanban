@@ -75,25 +75,28 @@ public class TaskManager {
 
     // Создание.
     public void createTask (Task task) {
-        int id = this.id++;
-
         this.id++;
+
+        int id = this.id;
+
         task.setId(id);
         tasks.put(id, task);
     }
 
     public void createEpic (Epic epic) {
-        int id = this.id++;
-
         this.id++;
+
+        int id = this.id;
+
         epic.setId(id);
         epics.put(id, epic);
     }
 
     public void createSubTask (SubTask subTask, int epicsId) {
-        int id = this.id++;
-
         this.id++;
+
+        int id = this.id;
+
         subTask.setId(id);
         subTasks.put(id, subTask);
         subTask.setEpicsId(epicsId);
