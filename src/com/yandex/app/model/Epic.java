@@ -1,5 +1,6 @@
 package com.yandex.app.model;
 
+import com.yandex.app.service.Status;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -17,4 +18,19 @@ public class Epic extends Task {
     public void addSubTaskToList(SubTask subTask) {
         subTasksList.add(subTask);
     }
+
+    public void statusRecalculation() {
+        ArrayList<Object> statusCheckList = new ArrayList<>();
+        for (SubTask subTask : subTasksList) {
+            statusCheckList.add(subTask.getStatus());
+        }
+        if (statusCheckList.contains("IN_PROGRESS")) {
+            setStatus(Status.IN_PROGRESS.name());
+        } else if (!statusCheckList.contains("IN_PROGRESS") && !statusCheckList.contains("NEW")) {
+            setStatus(Status.DONE.name());
+        } else {
+            setStatus(Status.NEW.name());
+        }
+    }
+
 }

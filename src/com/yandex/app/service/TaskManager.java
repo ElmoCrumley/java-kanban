@@ -104,7 +104,6 @@ public class TaskManager {
         for (Epic epic : epics.values()) {
             if (epic.getId() == epicsId) {
                 epic.addSubTaskToList(subTask);
-                epic.setStatus("IN_PROGRESS");
             }
         }
     }
@@ -115,15 +114,9 @@ public class TaskManager {
     }
 
     public void updateSubTask(SubTask subTask) {
-        epics.get(subTask.getEpicsId()).setStatus(Status.IN_PROGRESS.name());
-
-        for (SubTask subTaskInList : epics.get(subTask.getEpicsId()).getSubTasksList()) {
-            if (subTaskInList.equals(subTask)) {
-                subTaskInList = subTask;
-                break;
-            }
-        }
-
+        epics.get(subTask.getId()).getSubTasksList().remove(subTasks.get(subTask.getId()));
+        epics.get(subTask.getId()).addSubTaskToList(subTask);
+        epics.get(subTask.getId()).statusRecalculation();
         subTasks.put(subTask.getId(), subTask);
     }
 
