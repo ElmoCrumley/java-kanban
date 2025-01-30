@@ -139,6 +139,12 @@ public class TaskManager {
 
     // Получение списка всех подзадач определённого эпика.
     public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
-        return epic.getSubTasksList();
+        ArrayList<SubTask> subTasksList = new ArrayList<>();
+
+        for (SubTask subTask : epic.getSubTasksList()) {
+            subTasksList.add(subTask);
+        }
+
+        return subTasksList;
     }
 }
