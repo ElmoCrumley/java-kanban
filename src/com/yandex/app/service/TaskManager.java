@@ -114,10 +114,13 @@ public class TaskManager {
     }
 
     public void updateSubTask(SubTask subTask) {
-        epics.get(subTask.getId()).getSubTasksList().remove(subTasks.get(subTask.getId()));
-        epics.get(subTask.getId()).addSubTaskToList(subTask);
-        epics.get(subTask.getId()).recalculateStatus();
-        subTasks.put(subTask.getId(), subTask);
+        int subTaskId = subTask.getId();
+        Epic epic = epics.get(subTask.getId());
+
+        epic.getSubTasksList().remove(subTasks.get(subTaskId));
+        epic.addSubTaskToList(subTask);
+        epic.recalculateStatus();
+        subTasks.put(subTaskId, subTask);
     }
 
     // Удаление по идентификатору.
@@ -133,8 +136,12 @@ public class TaskManager {
     }
 
     public void removeSubTask(int id) {
-        epics.get(subTasks.get(id).getEpicsId()).getSubTasksList().remove(subTasks.get(id));
+        SubTask subTask = subTasks.get(id);
+        Epic epic = epics.get(subTask.getEpicsId());
+
+        epic.getSubTasksList().remove(subTask);
         subTasks.remove(id);
+        epic.recalculateStatus();
     }
 
     // Получение списка всех подзадач определённого эпика.
