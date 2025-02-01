@@ -116,7 +116,7 @@ public class TaskManager {
     public void updateSubTask(SubTask subTask) {
         epics.get(subTask.getId()).getSubTasksList().remove(subTasks.get(subTask.getId()));
         epics.get(subTask.getId()).addSubTaskToList(subTask);
-        epics.get(subTask.getId()).statusRecalculation();
+        epics.get(subTask.getId()).recalculateStatus();
         subTasks.put(subTask.getId(), subTask);
     }
 

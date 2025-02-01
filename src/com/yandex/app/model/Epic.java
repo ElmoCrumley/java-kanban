@@ -19,7 +19,7 @@ public class Epic extends Task {
         subTasksList.add(subTask);
     }
 
-    public void statusRecalculation() {
+    public void recalculateStatus() {
         ArrayList<Object> statusCheckList = new ArrayList<>();
         for (SubTask subTask : subTasksList) {
             statusCheckList.add(subTask.getStatus());
