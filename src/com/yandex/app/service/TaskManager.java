@@ -7,6 +7,7 @@ import com.yandex.app.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
@@ -146,12 +147,6 @@ public class TaskManager {
 
     // Получение списка всех подзадач определённого эпика.
     public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
-        ArrayList<SubTask> subTasksList = new ArrayList<>();
-
-        for (SubTask subTask : epic.getSubTasksList()) {
-            subTasksList.add(subTask);
-        }
-
-        return subTasksList;
+        return new ArrayList<>(List.copyOf(epic.getSubTasksList()));
     }
 }
