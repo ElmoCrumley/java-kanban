@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class TaskManager {
+public class InMemoryTaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();

@@ -3,12 +3,12 @@ package com.yandex.app;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-import com.yandex.app.service.TaskManager;
+import com.yandex.app.service.InMemoryTaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task1 = new Task("Задача 1.", "Описание задачи.");
         taskManager.createTask(task1);
