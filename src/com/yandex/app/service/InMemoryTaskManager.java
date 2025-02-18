@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
-    public ArrayList<Object> historyList = new ArrayList<>();
+    public List<Task> historyList = new ArrayList<>();
 
     // Получение списка всех задач.
     @Override
@@ -176,9 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public <T> ArrayList<T> getHistory(Map<Integer, T> tasks) {
-        ArrayList<T> historyList = new ArrayList<>();
-
+    public List<Task> getHistory() {
         return historyList;
     }
 
