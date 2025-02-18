@@ -92,5 +92,8 @@ public class Main {
         System.out.println(taskManager.getTasksList());
         System.out.println(taskManager.getEpicsList());
         System.out.println(taskManager.getSubTasksList());
+
+
+        taskManager.historyList.add(new InMemoryTaskManager());
     }
 }
