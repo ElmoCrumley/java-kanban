@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
-    public ArrayList<TaskManager> historyList = new ArrayList<>();
+    public ArrayList<Object> historyList = new ArrayList<>();
 
     // Получение списка всех задач.
     @Override
@@ -71,16 +71,28 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение по идентификатору.
     @Override
     public Task getTask(int id) {
+        historyList.add(tasks.get(id));
+        if (historyList.size() == 10) {
+            historyList.remove(0);
+        }
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
+        historyList.add(epics.get(id));
+        if (historyList.size() == 10) {
+            historyList.remove(0);
+        }
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTask(int id) {
+        historyList.add(subTasks.get(id));
+        if (historyList.size() == 10) {
+            historyList.remove(0);
+        }
         return subTasks.get(id);
     }
 
