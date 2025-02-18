@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class InMemoryTaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
 
     // Получение списка всех задач.
+    @Override
     public ArrayList<Task> getTasksList() {
         ArrayList<Task> tasksList = new ArrayList<>();
 
@@ -25,6 +26,7 @@ public class InMemoryTaskManager {
         return tasksList;
     }
 
+    @Override
     public ArrayList<Epic> getEpicsList() {
         ArrayList<Epic> epicsList = new ArrayList<>();
 
@@ -34,6 +36,7 @@ public class InMemoryTaskManager {
         return epicsList;
     }
 
+    @Override
     public ArrayList<SubTask> getSubTasksList() {
         ArrayList<SubTask> subTasksList = new ArrayList<>();
 
@@ -44,15 +47,18 @@ public class InMemoryTaskManager {
     }
 
     // Удаление всех задач.
+    @Override
     public void removeTasks() {
         tasks.clear();
     }
 
+    @Override
     public void removeEpics() {
             epics.clear();
             subTasks.clear();
     }
 
+    @Override
     public void removeSubTasks() {
             subTasks.clear();
             for (Epic epic : epics.values()) {
@@ -62,20 +68,24 @@ public class InMemoryTaskManager {
     }
 
     // Получение по идентификатору.
+    @Override
     public Task getTask(int id) {
         return tasks.get(id);
     }
 
+    @Override
     public Epic getEpic(int id) {
         return epics.get(id);
     }
 
+    @Override
     public SubTask getSubTask(int id) {
         return subTasks.get(id);
     }
 
     // Создание.
-    public void createTask (Task task) {
+    @Override
+    public void createTask(Task task) {
         this.id++;
 
         int id = this.id;
@@ -84,7 +94,8 @@ public class InMemoryTaskManager {
         tasks.put(id, task);
     }
 
-    public void createEpic (Epic epic) {
+    @Override
+    public void createEpic(Epic epic) {
         this.id++;
 
         int id = this.id;
@@ -93,7 +104,8 @@ public class InMemoryTaskManager {
         epics.put(id, epic);
     }
 
-    public void createSubTask (SubTask subTask, int epicsId) {
+    @Override
+    public void createSubTask(SubTask subTask, int epicsId) {
         this.id++;
 
         int id = this.id;
@@ -110,10 +122,12 @@ public class InMemoryTaskManager {
     }
 
     // Обновление.
+    @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
+    @Override
     public void updateSubTask(SubTask subTask) {
         int subTaskId = subTask.getId();
         Epic epic = epics.get(subTask.getId());
@@ -125,10 +139,12 @@ public class InMemoryTaskManager {
     }
 
     // Удаление по идентификатору.
+    @Override
     public void removeTask(int id) {
         tasks.remove(id);
     }
 
+    @Override
     public void removeEpic(int id) {
         for (SubTask subTask : epics.get(id).getSubTasksList()) {
             subTasks.remove(subTask.getId());
@@ -136,6 +152,7 @@ public class InMemoryTaskManager {
         epics.remove(id);
     }
 
+    @Override
     public void removeSubTask(int id) {
         SubTask subTask = subTasks.get(id);
         Epic epic = epics.get(subTask.getEpicsId());
@@ -145,7 +162,7 @@ public class InMemoryTaskManager {
         epic.recalculateStatus();
     }
 
-    // Получение списка всех подзадач определённого эпика.
+    // Получение списка всех подзадач определённого эпика. (дополнительный метод)
     public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
         return new ArrayList<>(List.copyOf(epic.getSubTasksList()));
     }
