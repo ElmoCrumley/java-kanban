@@ -29,6 +29,11 @@ public class Main {
         Managers.getDefault().createEpic(epic2);
         Managers.getDefault().createSubTask(subTask2, epic2.getId());
 
+        // Проверка получения метода
+        Managers.getDefault().getTask(task1.getId());
+        Managers.getDefault().getEpic(epic1.getId());
+        Managers.getDefault().getSubTask(subTask1point1.getId());
+
         Managers.printAllTasks(Managers.getDefault());
     }
 }
