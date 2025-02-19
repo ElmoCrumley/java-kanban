@@ -181,7 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Получение списка всех подзадач определённого эпика. (дополнительный метод)
-    public ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
+    public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
         return new ArrayList<>(List.copyOf(epic.getSubTasksList()));
     }
 }
