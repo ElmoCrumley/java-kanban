@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
-    public List<Task> historyList = new ArrayList<>();
+
 
     // Получение списка всех задач.
     @Override
@@ -173,11 +173,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubTasksList().remove(subTask);
         subTasks.remove(id);
         epic.recalculateStatus();
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        return historyList;
     }
 
     // Получение списка всех подзадач определённого эпика. (дополнительный метод)
