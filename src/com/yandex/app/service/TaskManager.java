@@ -5,8 +5,6 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public interface TaskManager {
     // Получение списка всех задач.
