@@ -55,17 +55,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeEpics() {
-            epics.clear();
-            subTasks.clear();
+        epics.clear();
+        subTasks.clear();
     }
 
     @Override
     public void removeSubTasks() {
-            subTasks.clear();
-            for (Epic epic : epics.values()) {
-                epic.getSubTasksList().clear();
-                epic.setStatus(Status.valueOf(Status.NEW.name()));
-            }
+        subTasks.clear();
+        for (Epic epic : epics.values()) {
+            epic.getSubTasksList().clear();
+            epic.setStatus(Status.valueOf(Status.NEW.name()));
+        }
     }
 
     // Получение по идентификатору.
