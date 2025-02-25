@@ -71,28 +71,19 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение по идентификатору.
     @Override
     public Task getTask(int id) {
-        historyManager.addTask(tasks.get(id)); // не совсем понимаю, что просят сделать в задании
-        if (historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().remove(0);
-        }
+        historyManager.addTask(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
         historyManager.addTask(epics.get(id));
-        if (historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().remove(0);
-        }
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTask(int id) {
         historyManager.addTask(subTasks.get(id));
-        if (historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().remove(0);
-        }
         return subTasks.get(id);
     }
 
