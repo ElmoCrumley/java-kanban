@@ -8,12 +8,12 @@ public class Task {
     private String name;
     private String description;
     private int id;
-    private Object status;
+    private Status status;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = Status.NEW.name();
+        this.status = Status.valueOf(Status.NEW.name());
     }
 
     public String getName() {
@@ -28,7 +28,7 @@ public class Task {
         return status;
     }
 
-    public void setStatus(Object status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

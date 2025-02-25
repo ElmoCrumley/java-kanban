@@ -25,11 +25,11 @@ public class Epic extends Task {
             statusCheckList.add(subTask.getStatus());
         }
         if (statusCheckList.contains("IN_PROGRESS")) {
-            setStatus(Status.IN_PROGRESS.name());
+            setStatus(Status.valueOf(Status.IN_PROGRESS.name()));
         } else if (!statusCheckList.contains("IN_PROGRESS") && !statusCheckList.contains("NEW")) {
-            setStatus(Status.DONE.name());
+            setStatus(Status.valueOf(Status.DONE.name()));
         } else {
-            setStatus(Status.NEW.name());
+            setStatus(Status.valueOf(Status.NEW.name()));
         }
     }
 
