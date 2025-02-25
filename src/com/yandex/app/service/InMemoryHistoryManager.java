@@ -9,8 +9,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> historyList = new ArrayList<>();
 
     @Override
-    public void add(Task task) {
-        historyList.add(task);
+    public void addTask(Task task) {
+        if (task != null) {
+            historyList.add(task);
+        }
     }
 
     @Override

@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
-
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     // Получение списка всех задач.
     @Override
@@ -71,27 +71,27 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение по идентификатору.
     @Override
     public Task getTask(int id) {
-        Managers.getDefaultHistory().getHistory().add(tasks.get(id)); // не совсем понимаю, что просят сделать в задании
-        if (Managers.getDefaultHistory().getHistory().size() == 10) {
-            Managers.getDefaultHistory().getHistory().remove(0);
+        historyManager.addTask(tasks.get(id)); // не совсем понимаю, что просят сделать в задании
+        if (historyManager.getHistory().size() == 10) {
+            historyManager.getHistory().remove(0);
         }
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
-        Managers.getDefaultHistory().getHistory().add(epics.get(id));
-        if (Managers.getDefaultHistory().getHistory().size() == 10) {
-            Managers.getDefaultHistory().getHistory().remove(0);
+        historyManager.addTask(epics.get(id));
+        if (historyManager.getHistory().size() == 10) {
+            historyManager.getHistory().remove(0);
         }
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTask(int id) {
-        Managers.getDefaultHistory().getHistory().add(subTasks.get(id));
-        if (Managers.getDefaultHistory().getHistory().size() == 10) {
-            Managers.getDefaultHistory().getHistory().remove(0);
+        historyManager.addTask(subTasks.get(id));
+        if (historyManager.getHistory().size() == 10) {
+            historyManager.getHistory().remove(0);
         }
         return subTasks.get(id);
     }
