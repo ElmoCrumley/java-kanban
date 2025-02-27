@@ -7,14 +7,14 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> historyList = new ArrayList<>();
-    public static final int historyLimit = 10;
+    public static final int HISTORY_LIMIT = 10;
 
     @Override
     public void addTask(Task task) {
         if (task != null) {
             historyList.add(task);
         }
-        if (historyList.size() == historyLimit) {
+        if (historyList.size() == HISTORY_LIMIT) {
             historyList.remove(0);
         }
     }
