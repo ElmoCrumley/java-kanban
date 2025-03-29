@@ -20,7 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public List<Task> getHistory() {
-        return new ArrayList<>((Collection) Map.copyOf(historyList));
+    public ArrayList<Task> getHistory() {
+        return new ArrayList<>(List.copyOf(historyList.values()));
     }
 }
