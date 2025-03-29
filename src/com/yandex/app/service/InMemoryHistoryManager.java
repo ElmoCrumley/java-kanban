@@ -2,21 +2,25 @@ package com.yandex.app.service;
 
 import com.yandex.app.model.Task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public List<Task> historyList = new ArrayList<>();
+    public Map<Integer, Task> historyList = new LinkedHashMap<>();
 
     @Override
     public void addTask(Task task) {
         if (task != null) {
-            historyList.add(task);
+            historyList.put(task.getId(), task);
         }
     }
 
     @Override
+    public void remove(int id) {
+        historyList.remove(id);
+    }
+
+    @Override
     public List<Task> getHistory() {
-        return new ArrayList<>(List.copyOf(historyList));
+        return new ArrayList<>((Collection) Map.copyOf(historyList));
     }
 }
