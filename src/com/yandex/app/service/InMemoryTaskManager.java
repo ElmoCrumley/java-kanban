@@ -19,32 +19,17 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение списка всех задач.
     @Override
     public ArrayList<Task> getTasksList() {
-        ArrayList<Task> tasksList = new ArrayList<>();
-
-        for (Task task : tasks.values()) {
-            tasksList.add(task);
-        }
-        return tasksList;
+        return new ArrayList<Task>(List.copyOf(tasks.values()));
     }
 
     @Override
     public ArrayList<Epic> getEpicsList() {
-        ArrayList<Epic> epicsList = new ArrayList<>();
-
-        for (Epic epic : epics.values()) {
-            epicsList.add(epic);
-        }
-        return epicsList;
+        return new ArrayList<Epic>(List.copyOf(epics.values()));
     }
 
     @Override
     public ArrayList<SubTask> getSubTasksList() {
-        ArrayList<SubTask> subTasksList = new ArrayList<>();
-
-        for (SubTask subTask : subTasks.values()) {
-            subTasksList.add(subTask);
-        }
-        return subTasksList;
+        return new ArrayList<SubTask>(List.copyOf(subTasks.values()));
     }
 
     // Удаление всех задач.
