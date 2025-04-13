@@ -19,17 +19,17 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение списка всех задач.
     @Override
     public ArrayList<Task> getTasksList() {
-        return new ArrayList<Task>(List.copyOf(tasks.values()));
+        return new ArrayList<Task>(tasks.values());
     }
 
     @Override
     public ArrayList<Epic> getEpicsList() {
-        return new ArrayList<Epic>(List.copyOf(epics.values()));
+        return new ArrayList<Epic>(epics.values());
     }
 
     @Override
     public ArrayList<SubTask> getSubTasksList() {
-        return new ArrayList<SubTask>(List.copyOf(subTasks.values()));
+        return new ArrayList<SubTask>(subTasks.values());
     }
 
     // Удаление всех задач.
@@ -190,6 +190,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Получение списка всех подзадач определённого эпика. (дополнительный метод)
     public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
-        return new ArrayList<>(List.copyOf(epic.getSubTasksList()));
+        return new ArrayList<>(epic.getSubTasksList());
     }
 }
