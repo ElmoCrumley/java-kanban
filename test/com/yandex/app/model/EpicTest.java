@@ -3,7 +3,6 @@ package com.yandex.app.model;
 import com.yandex.app.service.Managers;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,5 +35,28 @@ class EpicTest {
         final List<Task> history = Managers.getDefaultHistory().getHistory();
         assertNotNull(history, "История не пустая.");
         assertEquals(1, history.size(), "История не пустая.");
+    }
+
+    @Test
+    void addLast() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description");
+        Task task2 = new Task("Test addNewTask 2", "Test addNewTask description 2");
+
+        Managers.getDefault().createTask(task);
+        Managers.getDefault().createTask(task2);
+
+        int taskId = task.getId();
+        int taskId2 = task2.getId();
+
+        Task savedTask = Managers.getDefault().getTask(taskId); // я не понимаю почему у меня Managers.getDefaultHistory(); :null
+        Task savedTask2 = Managers.getDefault().getTask(taskId2);
+        final List<Task> history = Managers.getDefaultHistory().getHistory();
+
+        assertNotNull(history, "История не пустая.");
+        assertEquals(2, history.size(), "История не пустая.");
+        history.remove(taskId);
+        history.remove(taskId2);
+        assertEquals(null, history.contains(taskId), "Задача удалена");
+        assertEquals(null, history.contains(taskId2), "Задача 2 удалена");
     }
 }
