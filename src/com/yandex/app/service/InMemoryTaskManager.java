@@ -171,6 +171,12 @@ public class InMemoryTaskManager implements TaskManager {
         epic.recalculateStatus();
     }
 
+    @Override
+    public void clearAllTasks() {
+        removeTasks();
+        removeEpics();
+    }
+
     // Получение списка всех подзадач определённого эпика. (дополнительный метод)
     public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
         return new ArrayList<>(epic.getSubTasksList());

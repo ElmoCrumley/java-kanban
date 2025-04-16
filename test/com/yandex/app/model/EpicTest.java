@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
     @Test
-    void addNewTask() {
+    void addNewTaskTest() {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
 
         Managers.getDefault().createTask(task);
@@ -25,6 +25,8 @@ class EpicTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+        Managers.getDefault().clearAllTasks();
+        Managers.getDefaultHistory().clearAllHistory();
     }
 
     @Test
@@ -34,7 +36,9 @@ class EpicTest {
         Managers.getDefaultHistory().addTask(task);
         final List<Task> history = Managers.getDefaultHistory().getHistory();
         assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "История не пустая.");
+        assertEquals(1, history.size(), "Размер листа больше 1");
+        Managers.getDefault().clearAllTasks();
+        Managers.getDefaultHistory().clearAllHistory();
     }
 
     @Test
@@ -58,5 +62,7 @@ class EpicTest {
         Managers.getDefaultHistory().remove(taskId2);
         assertFalse(history.contains(taskId), "Задача не удалена.");
         assertFalse(history.contains(taskId2), "Задача 2 не удалена.");
+        Managers.getDefault().clearAllTasks();
+        Managers.getDefaultHistory().clearAllHistory();
     }
 }

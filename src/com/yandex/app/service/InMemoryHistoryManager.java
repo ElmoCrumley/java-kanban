@@ -45,6 +45,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         historyLinkedList.unlink(node);
     }
 
+    @Override
+    public void clearAllHistory() {
+        for (int key : historyMap.keySet()) {
+            remove(key);
+        }
+    }
+
     public static class DoublyLinkedList<T> {
         public Node<T> lastNode = new Node<>(null, null, null);
         public Node<T> head = new Node<>(null, null, null);
