@@ -52,11 +52,11 @@ class EpicTest {
         Task savedTask2 = Managers.getDefault().getTask(taskId2);
         final List<Task> history = Managers.getDefaultHistory().getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(2, history.size(), "История не пустая.");
-        history.remove(taskId);
-        history.remove(taskId2);
-        assertEquals(null, history.contains(taskId), "Задача удалена");
-        assertEquals(null, history.contains(taskId2), "Задача 2 удалена");
+        assertNotNull(history, "История пустая.");
+        assertEquals(2, history.size(), "Количество элементов не соответствует ожидаемому.");
+        Managers.getDefaultHistory().remove(taskId);
+        Managers.getDefaultHistory().remove(taskId2);
+        assertFalse(history.contains(taskId), "Задача не удалена.");
+        assertFalse(history.contains(taskId2), "Задача 2 не удалена.");
     }
 }
