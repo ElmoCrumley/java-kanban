@@ -6,7 +6,7 @@ import com.yandex.app.model.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private DoublyLinkedList<Task> historyLinkedList = new DoublyLinkedList<>();
+    private final DoublyLinkedList<Task> historyLinkedList = new DoublyLinkedList<>();
     public Map<Integer, Node> historyMap = new HashMap<>(); // Map<Node<task.id>, Node<task>>
 
     @Override
@@ -45,46 +45,35 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public static class DoublyLinkedList<T> {
-        public Node<T> head; // Node(null, T data, Node<T> next)
-        public Node<T> tail; // Node(Node<T> prev, T data, null)
-        // size of this shit (NULL, data, next)[0] ... (prev, data, next)[1] ... (prev, data, NULL)[size-1]
+        public Node<T> lastNode = new Node<>(null, null, null);
+        public Node<T> head = new Node<>(null, null, null);
+        public Node<T> tail = new Node<>(null, null, null);
         private int size = 0;
 
         public void addLast(T element) {
-            // [0 head](null, element, next) [1](prev, element, new) [2 tail](old, element, null)
-            // [0 head](null, element, new) [1](prev, element, null)
-            // [0 head](null, element, null)
-            final Node<T> oldTail = tail;
-            final Node<T> newNode = new Node<>(oldTail, element, null);
-            tail = newNode;
-            if (oldTail == null) // Первый элемент
-                head = newNode;
-            else
-                oldTail.next = newNode;
+            // [head](null, null, next) [0](prev, last, next) ... [tail](prev, null, null)
+            final Node<T> oldNode = lastNode;
+
+            lastNode = new Node<>(oldNode, element, tail);
+            lastNode.prev.next = lastNode;
+            lastNode.next.prev = lastNode;
+
+            if (size == 0) {
+                head.next = lastNode;
+                lastNode.prev = head;
+            }
+
             size++;
         }
 
-        public void unlink(Node<T> node) { // [0] [1] [2] -> [0] ... [1]
-            // assert x != null;
-            final T element = node.data; // [1]
-            final Node<T> next = node.next; // [2]
-            final Node<T> prev = node.prev; // [0]
+        public void unlink(Node<T> node) {
+            final T element = node.data;
+            final Node<T> next = node.next;
+            final Node<T> prev = node.prev;
 
-            if (prev == null) { // [0] [1] -> ... [0]
-                tail = next;
-            } else { // [0] [1] [2] -> [0] ... [1] or [0] [1] -> [0] ...
-                prev.next = next;
-                node.prev = null;
-            }
-
-            if (next == null) { // [0] [1] -> [0] ...
-                head = prev;
-            } else { // [0] [1] [2] -> [0] ... [1] or [0] [1] -> ... [0]
-                next.prev = prev;
-                node.next = null;
-            }
-
-            node.data = null;
+            prev.next = next;
+            next.prev = prev;
+            node.next = null;
             size--;
         }
 
