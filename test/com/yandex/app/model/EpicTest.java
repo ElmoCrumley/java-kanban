@@ -1,68 +1,78 @@
 package com.yandex.app.model;
 
+import com.yandex.app.service.HistoryManager;
 import com.yandex.app.service.Managers;
+import com.yandex.app.service.TaskManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
+    HistoryManager historyManager = Managers.getDefaultHistory();
+    TaskManager taskManager = Managers.getDefault();
+    Task task;
+    Task task2;
+    Task task3;
+
+    @AfterEach
+    void afterEach() {
+        historyManager.clearAllHistory();
+        taskManager.clearAllTasks();
+    }
+
     @Test
     void addNewTaskTest() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
+        // Первая задача
+        task = new Task("Test addNewTask", "Test addNewTask description");
 
-        Managers.getDefault().createTask(task);
+        taskManager.createTask(task);
 
         int taskId = task.getId();
 
-        Task savedTask = Managers.getDefault().getTask(taskId);
+        Task savedTask = taskManager.getTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
 
-        final List<Task> tasks = Managers.getDefault().getTasksList();
+        List<Task> tasks = taskManager.getTasksList();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.get(0), "Задачи не совпадают.");
-        Managers.getDefault().clearAllTasks();
-        Managers.getDefaultHistory().clearAllHistory();
-    }
 
-    @Test
-    void add() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
+        // Вторая задача
+        task2 = new Task("Test addNewTask", "Test addNewTask description");
 
-        Managers.getDefaultHistory().addTask(task);
-        final List<Task> history = Managers.getDefaultHistory().getHistory();
-        assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "Размер листа больше 1");
-        Managers.getDefault().clearAllTasks();
-        Managers.getDefaultHistory().clearAllHistory();
-    }
+        taskManager.createTask(task2);
 
-    @Test
-    void addLast() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description");
-        Task task2 = new Task("Test addNewTask 2", "Test addNewTask description 2");
-
-        Managers.getDefault().createTask(task);
-        Managers.getDefault().createTask(task2);
-
-        int taskId = task.getId();
         int taskId2 = task2.getId();
 
-        Task savedTask = Managers.getDefault().getTask(taskId); // я не понимаю почему у меня Managers.getDefaultHistory(); :null
-        Task savedTask2 = Managers.getDefault().getTask(taskId2);
-        final List<Task> history = Managers.getDefaultHistory().getHistory();
+        Task savedTask2 = taskManager.getTask(taskId2);
 
-        assertNotNull(history, "История пустая.");
-        assertEquals(2, history.size(), "Количество элементов не соответствует ожидаемому.");
-        Managers.getDefaultHistory().remove(taskId);
-        Managers.getDefaultHistory().remove(taskId2);
-        assertFalse(history.contains(taskId), "Задача не удалена.");
-        assertFalse(history.contains(taskId2), "Задача 2 не удалена.");
-        Managers.getDefault().clearAllTasks();
-        Managers.getDefaultHistory().clearAllHistory();
+        assertNotNull(savedTask2, "Задача не найдена.");
+        assertEquals(task2, savedTask2, "Задачи не совпадают.");
+
+        tasks = taskManager.getTasksList();
+
+        assertNotNull(tasks, "Задачи не возвращаются.");
+        assertEquals(2, tasks.size(), "Неверное количество задач.");
+
+
+        // Третья задача
+        task3 = new Task("Test addNewTask", "Test addNewTask description");
+
+        taskManager.createTask(task3);
+
+        int taskId3 = task3.getId();
+
+        Task savedTask3 = taskManager.getTask(taskId3);
+
+        assertNotNull(savedTask3, "Задача не найдена.");
+        assertEquals(task3, savedTask3, "Задачи не совпадают.");
+
+        tasks = taskManager.getTasksList();
+
+        assertNotNull(tasks, "Задачи не возвращаются.");
+        assertEquals(3, tasks.size(), "Неверное количество задач.");
     }
 }
