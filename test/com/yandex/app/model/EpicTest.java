@@ -1,16 +1,15 @@
 package com.yandex.app.model;
 
-import com.yandex.app.service.HistoryManager;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
+import static com.yandex.app.service.InMemoryTaskManager.historyManager;
+import static com.yandex.app.service.InMemoryHistoryManager.taskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
-    HistoryManager historyManager = Managers.getDefaultHistory();
-    TaskManager taskManager = Managers.getDefault();
     Task task;
     Task task2;
     Task task3;

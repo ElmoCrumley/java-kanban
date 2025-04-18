@@ -1,15 +1,14 @@
 package com.yandex.app.service;
-
 import com.yandex.app.model.Task;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import static com.yandex.app.service.InMemoryTaskManager.historyManager;
+import static com.yandex.app.service.InMemoryHistoryManager.taskManager;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
-    HistoryManager historyManager = Managers.getDefaultHistory();
-    TaskManager taskManager = Managers.getDefault();
     Task task;
     Task task2;
     Task task3;

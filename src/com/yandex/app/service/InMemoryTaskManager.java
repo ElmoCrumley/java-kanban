@@ -3,6 +3,8 @@ package com.yandex.app.service;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
+import static com.yandex.app.service.Managers.getDefaultHistory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
     private int id = hashCode();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    public static HistoryManager historyManager = getDefaultHistory();
 
     // Получение списка всех задач.
     @Override
