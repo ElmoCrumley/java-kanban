@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.yandex.app.service.InMemoryTaskManager.historyManager;
-import static com.yandex.app.service.InMemoryHistoryManager.taskManager;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
     Task task;
     Task task2;
     Task task3;
+    HistoryManager historyManager = Managers.getDefaultHistory();
+    TaskManager taskManager = Managers.getDefault();
 
     @BeforeEach
     void beforeEach() {
@@ -25,7 +25,7 @@ class InMemoryHistoryManagerTest {
 
     @AfterEach
     void afterEach() {
-        historyManager.clearAllHistory();
+        taskManager.get
         taskManager.clearAllTasks();
     }
 

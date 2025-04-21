@@ -1,9 +1,8 @@
 package com.yandex.app.model;
 
+import com.yandex.app.service.HistoryManager;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
-import static com.yandex.app.service.InMemoryTaskManager.historyManager;
-import static com.yandex.app.service.InMemoryHistoryManager.taskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -13,6 +12,8 @@ class EpicTest {
     Task task;
     Task task2;
     Task task3;
+    TaskManager taskManager = Managers.getDefault();
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     @AfterEach
     void afterEach() {

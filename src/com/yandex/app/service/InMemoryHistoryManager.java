@@ -3,22 +3,21 @@ package com.yandex.app.service;
 import com.yandex.app.model.Node;
 import com.yandex.app.model.Task;
 import java.util.*;
-import static com.yandex.app.service.Managers.getDefault;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final DoublyLinkedList<Task> historyLinkedList = new DoublyLinkedList<>();
-    public static Map<Integer, Node> historyMap = new HashMap<>(); // Map<Node<task.id>, Node<task>>
-    public static TaskManager taskManager = getDefault();
+    private final Map<Integer, Node> historyMap = new HashMap<>(); // Map<Node<task.id>, Node<task>>
 
     @Override
     public void addTask(Task task) {
         if (task != null) {
             int taskId = task.getId();
 
-            if (historyMap.containsValue(taskId)) {
-                historyMap.remove(taskId);
+            if (historyMap.containsKey(taskId)) {
+                remove(taskId);
             }
             historyLinkedList.addLast(task, task.getId());
+            historyMap.put(taskId, historyLinkedList.getLast());
         }
     }
 
@@ -43,7 +42,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public void removeNode(Node node) {
-        historyLinkedList.unlink(node);
+        if (node != null) {
+            historyLinkedList.unlink(node);
+        }
     }
 
     @Override
@@ -69,7 +70,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
             newNode.prev.next = newNode;
             newNode.next.prev = newNode;
-            historyMap.put(taskId, newNode);
             size++;
         }
 
@@ -81,6 +81,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             next.prev = prev;
             node.data = null;
             size--;
+        }
+
+        public Node<T> getLast() {
+            return tail.prev;
         }
 
         public int getSize() {
