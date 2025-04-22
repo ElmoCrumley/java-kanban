@@ -10,8 +10,8 @@ class InMemoryHistoryManagerTest {
     Task task;
     Task task2;
     Task task3;
-    HistoryManager historyManager = Managers.getDefaultHistory();
     TaskManager taskManager = Managers.getDefault();
+    HistoryManager historyManager = taskManager.getHistoryManager();
 
     @BeforeEach
     void beforeEach() {
@@ -25,8 +25,8 @@ class InMemoryHistoryManagerTest {
 
     @AfterEach
     void afterEach() {
-        taskManager.get
         taskManager.clearAllTasks();
+        historyManager.clearAllHistory();
     }
 
     @Test

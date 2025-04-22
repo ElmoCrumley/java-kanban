@@ -13,12 +13,12 @@ class EpicTest {
     Task task2;
     Task task3;
     TaskManager taskManager = Managers.getDefault();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    HistoryManager historyManager = taskManager.getHistoryManager();
 
     @AfterEach
     void afterEach() {
-        historyManager.clearAllHistory();
         taskManager.clearAllTasks();
+        historyManager.clearAllHistory();
     }
 
     @Test

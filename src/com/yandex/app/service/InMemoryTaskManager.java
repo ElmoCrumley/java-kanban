@@ -182,4 +182,9 @@ public class InMemoryTaskManager implements TaskManager {
     public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
         return new ArrayList<>(epic.getSubTasksList());
     }
+
+    @Override
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
 }
