@@ -5,15 +5,12 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
 public class Managers {
-    public static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-    public static InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-
     public static TaskManager getDefault() {
-        return inMemoryTaskManager;
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {
-        return inMemoryHistoryManager;
+        return new InMemoryHistoryManager();
     }
 
     public static void printAllTasks(TaskManager manager) {
