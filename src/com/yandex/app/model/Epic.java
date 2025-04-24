@@ -1,6 +1,8 @@
 package com.yandex.app.model;
 
 import com.yandex.app.service.Status;
+import com.yandex.app.service.Type;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -9,6 +11,11 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.valueOf(Type.EPIC.name());
     }
 
     public ArrayList<SubTask> getSubTasksList() {
