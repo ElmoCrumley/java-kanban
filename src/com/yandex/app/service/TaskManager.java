@@ -50,4 +50,6 @@ public interface TaskManager {
     void clearAllTasks();
 
     HistoryManager getHistoryManager();
+
+    TaskManager getTaskManager();
 }

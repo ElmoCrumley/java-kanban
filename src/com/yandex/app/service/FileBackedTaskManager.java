@@ -3,23 +3,102 @@ package com.yandex.app.service;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-import java.io.File;
+
+import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    File autoSave;
+    TaskManager taskManager = Managers.getDefault();
+    static File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
-        this.autoSave = autoSave;
+        FileBackedTaskManager.autoSave = autoSave;
     }
 
-//    @Override
-//    public void addSubtask(Subtask subtask) {
-//        super.addSubtask(subtask);
-//        save();
-//    }
+    @Override
+    public void createTask(Task task) {
+        super.createTask(task);
+        save();
+    }
+
+    @Override
+    public void createEpic(Epic epic) {
+        super.createEpic(epic);
+        save();
+    }
+
+    @Override
+    public void createSubTask(SubTask subTask, int epicsId) {
+        super.createSubTask(subTask, epicsId);
+        save();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        super.updateTask(task);
+        save();
+    }
+
+    @Override
+    public void updateSubTask(SubTask subTask){
+        super.updateSubTask(subTask);
+        save();
+    }
+
+    @Override
+    public void removeTask(int id){
+        super.removeTask(id);
+        save();
+    }
+
+    @Override
+    public void removeEpic(int id) {
+        super.removeEpic(id);
+        save();
+    }
+
+    @Override
+    public void removeSubTask(int id){
+        super.removeSubTask(id);
+        save();
+    }
+
+    @Override
+    public void removeTasks(){
+        super.removeTasks();
+        save();
+    }
+
+    @Override
+    public void removeEpics() {
+        super.removeEpics();
+        save();
+    }
+
+    @Override
+    public void removeSubTasks() {
+        super.removeSubTasks();
+        save();
+    }
 
     // Запись в файл.
     public void save() {
+            try {
+                Writer fileWriter = new FileWriter(autoSave.getName());
+
+                for (Task task : taskManager.getTasksList()) {
+                    fileWriter.write(task.toString() + "\n");
+                }
+
+                for (Epic epic : taskManager.getEpicsList()) {
+                    fileWriter.write(epic.toString() + "\n");
+                }
+
+                for (SubTask subTask : taskManager.getSubTasksList()) {
+                    fileWriter.write(subTask.toString() + "\n");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
     }
 
@@ -42,6 +121,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     // Восстановление данных из файла.
     static FileBackedTaskManager loadFromFile(File file) {
         // Построчно создавать задачи. Для эпиков создать списки подзадач
+        try {
+            Reader fileReader = new FileReader(autoSave.getName());
+
+
+            String[] split = value.split(",");
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public Task fromString(String value) {
@@ -66,5 +155,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             default:
                 return null;
         }
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }
