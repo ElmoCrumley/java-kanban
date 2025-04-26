@@ -7,7 +7,6 @@ import com.yandex.app.model.Task;
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    TaskManager taskManager = Managers.getDefault();
     static File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
@@ -85,21 +84,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             try {
                 Writer fileWriter = new FileWriter(autoSave.getName());
 
-                for (Task task : taskManager.getTasksList()) {
+                for (Task task : super.getTasksList()) {
                     fileWriter.write(task.toString() + "\n");
                 }
 
-                for (Epic epic : taskManager.getEpicsList()) {
+                for (Epic epic : super.getEpicsList()) {
                     fileWriter.write(epic.toString() + "\n");
                 }
 
-                for (SubTask subTask : taskManager.getSubTasksList()) {
+                for (SubTask subTask : super.getSubTasksList()) {
                     fileWriter.write(subTask.toString() + "\n");
                 }
+
+                fileWriter.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
     }
 
     public String toString(Task task) {
@@ -120,17 +120,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Восстановление данных из файла.
     static FileBackedTaskManager loadFromFile(File file) {
-        // Построчно создавать задачи. Для эпиков создать списки подзадач
         try {
-            Reader fileReader = new FileReader(autoSave.getName());
+            Reader fileReader = new FileReader(file.getName());
+            BufferedReader br = new BufferedReader(fileReader);
 
+            while (br.ready()) {
+                String[] split = br.readLine().split(",");
 
-            String[] split = value.split(",");
+                switch (split[1]) {
+                    case "TASK":
+                        Task task = new Task(split[2], split[4]);
+                        createTask(task);
+                        break;
+                    case "SUBTASK":
+                        SubTask subTask = new SubTask(split[2], split[4]);
+                        createTask(subTask);
+                        break;
+                    case "EPIC":
+                        Epic epic = new Epic(split[2], split[4]);
+                        createTask(epic);
+                        break;
+                }
+            }
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            fileReader.close();
+            br.close();
+        } catch (IOException x) {
+            throw new RuntimeException(x);
         }
-
     }
 
     public Task fromString(String value) {
@@ -155,9 +172,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             default:
                 return null;
         }
-    }
-
-    public TaskManager getTaskManager() {
-        return taskManager;
     }
 }
