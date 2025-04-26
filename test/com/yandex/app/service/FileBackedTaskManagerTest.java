@@ -15,7 +15,6 @@ class FileBackedTaskManagerTest {
     Task task3;
     static File autoSave;
     TaskManager fileBackedtaskManager;
-    TaskManager taskManager;
 
     @BeforeEach
     void beforeEach() {
@@ -26,7 +25,6 @@ class FileBackedTaskManagerTest {
         }
 
         fileBackedtaskManager = new FileBackedTaskManager(autoSave);
-        taskManager = fileBackedtaskManager.getTaskManager();
         task = new Task("Test addNewTask", "Test addNewTask description");
         task2 = new Task("Test addNewTask", "Test addNewTask description");
         task3 = new Task("Test addNewTask", "Test addNewTask description");
@@ -34,8 +32,8 @@ class FileBackedTaskManagerTest {
 
     @AfterEach
     void afterEach() {
-        taskManager.clearAllTasks();
-        taskManager.getHistoryManager().clearAllHistory();
+        fileBackedtaskManager.clearAllTasks();
+        fileBackedtaskManager.getHistoryManager().clearAllHistory();
     }
 
     @Test
