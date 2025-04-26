@@ -3,6 +3,7 @@ package com.yandex.app.service;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
+import java.io.File;
 
 public class Managers {
     public static TaskManager getDefault() {
@@ -11,6 +12,10 @@ public class Managers {
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
+    }
+
+    public static FileBackedTaskManager getDefaultSave() {
+        return new FileBackedTaskManager(new File("autoSave.txt"));
     }
 
     public static void printAllTasks(TaskManager manager) {
