@@ -14,8 +14,8 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static FileBackedTaskManager getDefaultSave() {
-        return new FileBackedTaskManager(new File("autoSave.txt"));
+    public static TaskManager getDefaultSave(File file) {
+        return FileBackedTaskManager.loadFromFile(file);
     }
 
     public static void printAllTasks(TaskManager manager) {
