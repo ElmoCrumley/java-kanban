@@ -81,25 +81,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Запись в файл.
     public void save() {
-            try {
-                Writer fileWriter = new FileWriter(autoSave.getName());
+        try {
+            Writer fileWriter = new FileWriter(autoSave.getName());
 
-                for (Task task : super.getTasksList()) {
-                    fileWriter.write(task.toString() + "\n");
-                }
-
-                for (Epic epic : super.getEpicsList()) {
-                    fileWriter.write(epic.toString() + "\n");
-                }
-
-                for (SubTask subTask : super.getSubTasksList()) {
-                    fileWriter.write(subTask.toString() + "\n");
-                }
-
-                fileWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            for (Task task : super.getTasksList()) {
+                fileWriter.write(task.toString() + "\n");
             }
+
+            for (Epic epic : super.getEpicsList()) {
+                fileWriter.write(epic.toString() + "\n");
+            }
+
+            for (SubTask subTask : super.getSubTasksList()) {
+                fileWriter.write(subTask.toString() + "\n");
+            }
+
+            fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String toString(Task task) {
@@ -120,31 +120,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Восстановление данных из файла.
     static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+
         try {
-            Reader fileReader = new FileReader(file.getName());
+            Reader fileReader = new FileReader(file.getAbsolutePath());
             BufferedReader br = new BufferedReader(fileReader);
 
             while (br.ready()) {
                 String[] split = br.readLine().split(",");
 
-                switch (split[1]) {
-                    case "TASK":
-                        Task task = new Task(split[2], split[4]);
-                        createTask(task);
-                        break;
-                    case "SUBTASK":
-                        SubTask subTask = new SubTask(split[2], split[4]);
-                        createTask(subTask);
-                        break;
-                    case "EPIC":
-                        Epic epic = new Epic(split[2], split[4]);
-                        createTask(epic);
-                        break;
+                if (split[0] != null) {
+                    switch (split[1]) {
+                        case "TASK":
+                            Task task = new Task(split[2], split[4]);
+                            fileBackedTaskManager.createTask(task);
+                            break;
+                        case "SUBTASK":
+                            SubTask subTask = new SubTask(split[2], split[4]);
+                            fileBackedTaskManager.createTask(subTask);
+                            break;
+                        case "EPIC":
+                            Epic epic = new Epic(split[2], split[4]);
+                            fileBackedTaskManager.createTask(epic);
+                            break;
+                    }
                 }
             }
 
             fileReader.close();
             br.close();
+            return fileBackedTaskManager;
         } catch (IOException x) {
             throw new RuntimeException(x);
         }
