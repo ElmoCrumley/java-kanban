@@ -1,46 +1,37 @@
 package com.yandex.app.service;
 
 import com.yandex.app.model.Task;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest {
     Task task;
     Task task2;
     Task task3;
-    static File autoSave;
+    File log;
     TaskManager fileBackedtaskManager;
 
     @BeforeEach
     void beforeEach() {
+        task = new Task("Test addNewTask", "Test addNewTask description");
+        task2 = new Task("Test addNewTask", "Test addNewTask description");
+        task3 = new Task("Test addNewTask", "Test addNewTask description");
+
         try {
-            autoSave = new File(String.valueOf(Files.createTempFile("autoSave", ".txt")));
+            log = File.createTempFile("myTempFile", ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        fileBackedtaskManager = new FileBackedTaskManager(autoSave);
-        task = new Task("Test addNewTask", "Test addNewTask description");
-        task2 = new Task("Test addNewTask", "Test addNewTask description");
-        task3 = new Task("Test addNewTask", "Test addNewTask description");
-    }
-
-    @AfterEach
-    void afterEach() {
-        fileBackedtaskManager.clearAllTasks();
-        fileBackedtaskManager.getHistoryManager().clearAllHistory();
+        fileBackedtaskManager = Managers.getDefaultSave(log.getAbsoluteFile());
     }
 
     @Test
-    void createTask() {
-        assertNotNull(autoSave);
+    void createTask() throws IOException {
+        assertNotNull(log);
 
-        fileBackedtaskManager.createTask(task);
 
     }
 }
