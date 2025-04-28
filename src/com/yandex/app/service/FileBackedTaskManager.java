@@ -10,7 +10,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     static File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
-        this.autoSave = autoSave;
+        FileBackedTaskManager.autoSave = autoSave;
     }
 
     @Override
