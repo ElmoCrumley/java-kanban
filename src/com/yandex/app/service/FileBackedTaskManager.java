@@ -10,7 +10,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     static File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
-        FileBackedTaskManager.autoSave = autoSave;
+        this.autoSave = autoSave;
     }
 
     @Override
@@ -85,15 +85,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             Writer fileWriter = new FileWriter(autoSave.getName());
 
             for (Task task : super.getTasksList()) {
-                fileWriter.write(task.toString() + "\n");
+                fileWriter.write(toString(task) + "\n");
             }
 
             for (Epic epic : super.getEpicsList()) {
-                fileWriter.write(epic.toString() + "\n");
+                fileWriter.write(toString(epic) + "\n");
             }
 
             for (SubTask subTask : super.getSubTasksList()) {
-                fileWriter.write(subTask.toString() + "\n");
+                fileWriter.write(toString(subTask) + "\n");
             }
 
             fileWriter.close();
