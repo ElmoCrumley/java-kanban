@@ -1,7 +1,5 @@
 package com.yandex.app.service;
 
-import com.yandex.app.model.Epic;
-import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,23 +40,22 @@ class FileBackedTaskManagerTest {
         fileBackedtaskManager.createTask(task3);
         System.out.println(fileBackedtaskManager.getTasksList());
 
-        Reader fileReader = new FileReader(log.getName());
+        Reader fileReader = new FileReader(log.getAbsolutePath());
         BufferedReader br = new BufferedReader(fileReader);
+
         while (br.ready()) {
             String split = br.readLine();
             System.out.println(split);
         }
         fileReader.close();
         br.close();
-
-//        try {
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         fileBackedtaskManager2 = FileBackedTaskManager.loadFromFile(log);
+
         ArrayList<Task> tasks = fileBackedtaskManager2.getTasksList();
+
         System.out.println(tasks);
 
-
+        assertEquals(fileBackedtaskManager.getTasksList().getFirst(), fileBackedtaskManager2.getTasksList().getFirst());
+        assertEquals(fileBackedtaskManager.getTasksList().getLast(), fileBackedtaskManager2.getTasksList().getLast());
     }
 }
