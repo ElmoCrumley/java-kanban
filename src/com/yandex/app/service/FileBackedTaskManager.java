@@ -82,7 +82,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     // Запись в файл.
     public void save() {
         try {
-            Writer fileWriter = new FileWriter(autoSave.getName());
+            Writer fileWriter = new FileWriter(autoSave.getAbsoluteFile());
 
             for (Task task : super.getTasksList()) {
                 fileWriter.write(toString(task) + "\n");
