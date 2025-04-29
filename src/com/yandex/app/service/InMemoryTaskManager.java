@@ -15,6 +15,18 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = hashCode();
     HistoryManager historyManager = Managers.getDefaultHistory();
 
+    public Map<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public Map<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public Map<Integer, SubTask> getSubTasks() {
+        return subTasks;
+    }
+
     // Получение списка всех задач.
     @Override
     public ArrayList<Task> getTasksList() {
