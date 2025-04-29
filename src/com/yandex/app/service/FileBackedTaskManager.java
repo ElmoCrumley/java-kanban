@@ -127,21 +127,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             BufferedReader br = new BufferedReader(fileReader);
 
             while (br.ready()) {
-                String[] split = br.readLine().split(",");
+                String line = br.readLine();
+                Task task = fromString(line);
 
-                if (split[0] != null) {
-                    switch (split[1]) {
-                        case "TASK":
-                            Task task = new Task(split[2], split[4]);
-                            fileBackedTaskManager.createTask(task);
+                if (task != null) {
+                    switch (task.getType()) {
+                        case Type.TASK:
+                            fileBackedTaskManager.getTasks().put(task.getId(), task);
                             break;
-                        case "SUBTASK":
-                            SubTask subTask = new SubTask(split[2], split[4]);
-                            fileBackedTaskManager.createTask(subTask);
+                        case Type.EPIC:
+                            fileBackedTaskManager.getEpics().put(task.getId(), (Epic) task);
                             break;
-                        case "EPIC":
-                            Epic epic = new Epic(split[2], split[4]);
-                            fileBackedTaskManager.createTask(epic);
+                        case Type.SUBTASK:
+                            fileBackedTaskManager.getSubTasks().put(task.getId(), (SubTask) task);
+                            for (Epic epic : fileBackedTaskManager.getEpics().values()) {
+                                if (epic.getId() == ((SubTask) task).getEpicsId()) {
+                                    epic.addSubTaskToList((SubTask) task);
+                                }
+                            }
                             break;
                     }
                 }
@@ -155,7 +158,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public Task fromString(String value) {
+    static Task fromString(String value) {
         String[] split = value.split(","); // id,type,name,status,description,epic
         switch (split[1]) {
             case "TASK":
