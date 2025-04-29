@@ -38,13 +38,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void updateSubTask(SubTask subTask){
+    public void updateSubTask(SubTask subTask) {
         super.updateSubTask(subTask);
         save();
     }
 
     @Override
-    public void removeTask(int id){
+    public void removeTask(int id) {
         super.removeTask(id);
         save();
     }
@@ -56,13 +56,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void removeSubTask(int id){
+    public void removeSubTask(int id) {
         super.removeSubTask(id);
         save();
     }
 
     @Override
-    public void removeTasks(){
+    public void removeTasks() {
         super.removeTasks();
         save();
     }
