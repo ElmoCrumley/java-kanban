@@ -26,8 +26,6 @@ class FileBackedTaskManagerTest {
 
         try {
             log = File.createTempFile("myTempFile", ".txt");
-            log = File.createTempFile("myTempFile2", ".txt");
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,7 +57,7 @@ class FileBackedTaskManagerTest {
 //        }
         fileBackedtaskManager2 = FileBackedTaskManager.loadFromFile(log);
         ArrayList<Task> tasks = fileBackedtaskManager2.getTasksList();
-
+        System.out.println(tasks);
 
 
     }
