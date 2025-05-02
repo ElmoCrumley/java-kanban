@@ -28,7 +28,7 @@ class FileBackedTaskManagerTest {
             throw new RuntimeException(e);
         }
 
-        fileBackedtaskManager = Managers.getDefaultSave(log.getAbsoluteFile());
+        fileBackedtaskManager = Managers.getDefault(log.getAbsoluteFile());
     }
 
     @Test
