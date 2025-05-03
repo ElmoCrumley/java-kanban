@@ -6,7 +6,7 @@ import com.yandex.app.model.Task;
 
 import java.io.*;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager  {
     static File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
@@ -81,24 +81,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Запись в файл.
     public void save() {
-        try {
-            Writer fileWriter = new FileWriter(autoSave.getAbsoluteFile());
-
+        try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
             for (Task task : super.getTasksList()) {
-                fileWriter.write(toString(task) + "\n");
+                bufferedWriter.write(toString(task) + "\n");
             }
 
             for (Epic epic : super.getEpicsList()) {
-                fileWriter.write(toString(epic) + "\n");
+                bufferedWriter.write(toString(epic) + "\n");
             }
 
             for (SubTask subTask : super.getSubTasksList()) {
-                fileWriter.write(toString(subTask) + "\n");
+                bufferedWriter.write(toString(subTask) + "\n");
             }
-
-            fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e);
         }
     }
 
