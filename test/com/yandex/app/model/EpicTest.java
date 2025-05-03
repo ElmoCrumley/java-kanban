@@ -4,7 +4,11 @@ import com.yandex.app.service.HistoryManager;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,8 +16,22 @@ class EpicTest {
     Task task;
     Task task2;
     Task task3;
-    TaskManager taskManager = Managers.getDefault();
-    HistoryManager historyManager = taskManager.getHistoryManager();
+    File log;
+
+    TaskManager taskManager;
+    HistoryManager historyManager;
+
+    @BeforeEach
+    void beforeEach() throws IOException {
+        try {
+            log = File.createTempFile("myTempFile", ".txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        taskManager = Managers.getDefault(log.getAbsoluteFile());
+        historyManager = taskManager.getHistoryManager();
+    }
 
     @AfterEach
     void afterEach() {

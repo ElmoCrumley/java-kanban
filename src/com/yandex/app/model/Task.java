@@ -1,6 +1,7 @@
 package com.yandex.app.model;
 
 import com.yandex.app.service.Status;
+import com.yandex.app.service.Type;
 
 import java.util.Objects;
 
@@ -20,12 +21,20 @@ public class Task {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public int getId() {
         return id;
     }
 
     public Object getStatus() {
         return status;
+    }
+
+    public Type getType() {
+        return Type.valueOf(Type.TASK.name());
     }
 
     public void setStatus(Status status) {

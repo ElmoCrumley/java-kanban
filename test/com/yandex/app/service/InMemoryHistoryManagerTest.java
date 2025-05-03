@@ -4,17 +4,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
     Task task;
     Task task2;
     Task task3;
-    TaskManager taskManager = Managers.getDefault();
-    HistoryManager historyManager = taskManager.getHistoryManager();
+    File log;
+    TaskManager taskManager;
+    HistoryManager historyManager;
 
     @BeforeEach
     void beforeEach() {
+        try {
+            log = File.createTempFile("myTempFile", ".txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        taskManager = Managers.getDefault(log);
+        historyManager = taskManager.getHistoryManager();
+
         task = new Task("Test addNewTask", "Test addNewTask description");
         task2 = new Task("Test addNewTask", "Test addNewTask description");
         task3 = new Task("Test addNewTask", "Test addNewTask description");
