@@ -3,14 +3,41 @@ package com.yandex.app.model;
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private final ArrayList<SubTask> subTasksList = new ArrayList<>();
+    LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void recalculateDuration() {
+        if (subTasksList != null) {
+            super.duration = Duration.ZERO;
+            for (SubTask subTask : subTasksList) {
+                duration.plus(subTask.duration);
+            }
+        } else {
+            super.duration = Duration.ZERO;
+        }
+    }
+
+    public void recalculateStartTime() {
+        super.startTime = subTasksList.getFirst().startTime;
+    }
+
+    public void recalculateEndTime() {
+        endTime = subTasksList.getLast().startTime.plus(duration);
     }
 
     @Override
@@ -39,5 +66,4 @@ public class Epic extends Task {
             setStatus(Status.valueOf(Status.NEW.name()));
         }
     }
-
 }
