@@ -3,6 +3,8 @@ package com.yandex.app.model;
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,11 +12,17 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    Duration duration; // Продолжительность задачи в минутах
+    LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.valueOf(Status.NEW.name());
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     public String getName() {
