@@ -135,6 +135,8 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             if (epic.getId() == epicsId) {
                 epic.addSubTaskToList(subTask);
+                epic.recalculateDuration();
+                epic.recalculateEndTime();
             }
         }
     }
@@ -153,6 +155,9 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubTasksList().remove(subTasks.get(subTaskId));
         epic.addSubTaskToList(subTask);
         epic.recalculateStatus();
+        epic.recalculateDuration();
+        epic.recalculateStartTime();
+        epic.recalculateEndTime();
         subTasks.put(subTaskId, subTask);
     }
 
@@ -182,6 +187,9 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.remove(id);
         subTasks.remove(id);
         epic.recalculateStatus();
+        epic.recalculateDuration();
+        epic.recalculateStartTime();
+        epic.recalculateEndTime();
     }
 
     @Override
