@@ -13,7 +13,7 @@ public class Task {
     private int id;
     private Status status;
     Duration duration; // Продолжительность задачи в минутах
-    LocalDateTime startTime;
+    public LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
