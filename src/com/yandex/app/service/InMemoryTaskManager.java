@@ -4,14 +4,13 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
+    private Collection<Task> allTasks = new TreeSet<>(new DataComparator());
     private int id = hashCode();
     HistoryManager historyManager = Managers.getDefaultHistory();
 
@@ -110,6 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         task.setId(id);
         tasks.put(id, task);
+        allTasks.add(task);
     }
 
     @Override
@@ -120,6 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         epic.setId(id);
         epics.put(id, epic);
+        allTasks.add(epic);
     }
 
     @Override
@@ -130,6 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         subTask.setId(id);
         subTasks.put(id, subTask);
+        allTasks.add(subTask);
         subTask.setEpicsId(epicsId);
 
         for (Epic epic : epics.values()) {
@@ -206,5 +208,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public HistoryManager getHistoryManager() {
         return historyManager;
+    }
+
+    public ArrayList<Task> getPrioritizedTasks() {
+        return new ArrayList<>(allTasks);
+    }
+
+    public static class DataComparator implements Comparator<Task> {
+        @Override
+        public int compare(Task o1, Task o2) {
+            if (o1.startTime.isBefore(o2.startTime)) {
+                return -1;
+            } else if (o1.startTime.isAfter(o2.startTime)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }
