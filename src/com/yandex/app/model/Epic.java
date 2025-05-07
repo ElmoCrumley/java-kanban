@@ -33,7 +33,12 @@ public class Epic extends Task {
     }
 
     public void recalculateStartTime() {
-        super.startTime = subTasksList.getFirst().startTime;
+        //super.startTime = subTasksList.getFirst().startTime;
+
+
+//        for (SubTask subTask : subTasksList) {
+//            duration.plus(subTask.duration);
+//        }
     }
 
     public void recalculateEndTime() {
