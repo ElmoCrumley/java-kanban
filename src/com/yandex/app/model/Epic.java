@@ -39,7 +39,13 @@ public class Epic extends Task {
     }
 
     public void recalculateEndTime() {
-        endTime = subTasksList.getLast().startTime.plus(duration);
+        for (SubTask subTask : subTasksList) {
+            LocalDateTime subTaskEndTime = subTask.startTime.plus(subTask.duration);
+
+            if (subTaskEndTime.isAfter(endTime)) {
+                super.startTime = subTaskEndTime;
+            }
+        }
     }
 
     @Override
