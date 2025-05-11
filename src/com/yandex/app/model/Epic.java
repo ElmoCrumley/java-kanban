@@ -22,13 +22,9 @@ public class Epic extends Task {
     }
 
     public void recalculateDuration() {
-        if (subTasksList != null) {
-            super.duration = Duration.ZERO;
-            for (SubTask subTask : subTasksList) {
-                duration.plus(subTask.duration);
-            }
-        } else {
-            super.duration = Duration.ZERO;
+        super.duration = Duration.ZERO;
+        for (SubTask subTask : subTasksList) {
+            super.duration.plus(subTask.duration);
         }
     }
 
