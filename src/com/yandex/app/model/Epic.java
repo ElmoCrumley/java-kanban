@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Epic extends Task {
 
     private final ArrayList<SubTask> subTasksList = new ArrayList<>();
-    LocalDateTime endTime;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -22,28 +22,34 @@ public class Epic extends Task {
     }
 
     public void recalculateDuration() {
-        super.duration = Duration.ZERO;
+        super.setDuration(Duration.ZERO);
         for (SubTask subTask : subTasksList) {
-            super.duration.plus(subTask.duration);
+            if (subTask.getDuration() != null) {
+                super.getDuration().plus(subTask.getDuration());
+            }
         }
     }
 
     public void recalculateStartTime() {
         for (SubTask subTask : subTasksList) {
-            LocalDateTime subTaskStartTime = subTask.startTime;
+            if (subTask.getStartTime() != null) {
+                LocalDateTime subTaskStartTime = subTask.getStartTime();
 
-            if (subTaskStartTime.isBefore(super.startTime)) {
-                super.startTime = subTaskStartTime;
+                if (subTaskStartTime.isBefore(super.getStartTime())) {
+                    super.setStartTime(subTaskStartTime);
+                }
             }
         }
     }
 
     public void recalculateEndTime() {
         for (SubTask subTask : subTasksList) {
-            LocalDateTime subTaskEndTime = subTask.startTime.plus(subTask.duration);
+            if (subTask.getStartTime() != null && subTask.getDuration() != null) {
+                LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
 
-            if (subTaskEndTime.isAfter(endTime)) {
-                super.startTime = subTaskEndTime;
+                if (subTaskEndTime.isAfter(endTime)) {
+                    endTime = subTaskEndTime;
+                }
             }
         }
     }
