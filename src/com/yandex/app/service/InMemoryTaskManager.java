@@ -109,7 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         task.setId(id);
         tasks.put(id, task);
-        if (task.duration != null || task.startTime != null) {
+        if (task.getDuration() != null || task.getStartTime() != null) {
             allTasksWithDuration.add(task);
         }
     }
@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         epic.setId(id);
         epics.put(id, epic);
-        if (epic.duration != null || epic.startTime != null) {
+        if (epic.getDuration() != null || epic.getStartTime() != null) {
             allTasksWithDuration.add(epic);
         }
     }
@@ -135,7 +135,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         subTask.setId(id);
         subTasks.put(id, subTask);
-        if (subTask.duration != null || subTask.startTime != null) {
+        if (subTask.getDuration() != null || subTask.getStartTime() != null) {
             allTasksWithDuration.add(subTask);
         }
         subTask.setEpicsId(epicsId);
@@ -223,9 +223,9 @@ public class InMemoryTaskManager implements TaskManager {
     public static class DataComparator implements Comparator<Task> {
         @Override
         public int compare(Task o1, Task o2) {
-            if (o1.startTime.isBefore(o2.startTime)) {
+            if (o1.getStartTime().isBefore(o2.getStartTime())) {
                 return -1;
-            } else if (o1.startTime.isAfter(o2.startTime)) {
+            } else if (o1.getStartTime().isAfter(o2.getStartTime())) {
                 return 1;
             } else {
                 return 0;
