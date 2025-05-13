@@ -12,13 +12,29 @@ public class Task {
     private String description;
     private int id;
     private Status status;
-    public Duration duration; // Продолжительность задачи в минутах
-    public LocalDateTime startTime;
+    private Duration duration; // Продолжительность задачи в минутах
+    private LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.valueOf(Status.NEW.name());
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public LocalDateTime getEndTime() {
