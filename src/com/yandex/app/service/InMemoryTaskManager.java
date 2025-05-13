@@ -10,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
     private Map<Integer, Epic> epics = new HashMap<>();
     private Map<Integer, SubTask> subTasks = new HashMap<>();
-    private Collection<Task> allTasks = new TreeSet<>(new DataComparator());
+    private Collection<Task> allTasksWithDuration = new TreeSet<>(new DataComparator());
     private int id = hashCode();
     HistoryManager historyManager = Managers.getDefaultHistory();
 
@@ -109,7 +109,9 @@ public class InMemoryTaskManager implements TaskManager {
 
         task.setId(id);
         tasks.put(id, task);
-        allTasks.add(task);
+        if (task.duration != null || task.startTime != null) {
+            allTasksWithDuration.add(task);
+        }
     }
 
     @Override
@@ -120,7 +122,9 @@ public class InMemoryTaskManager implements TaskManager {
 
         epic.setId(id);
         epics.put(id, epic);
-        allTasks.add(epic);
+        if (epic.duration != null || epic.startTime != null) {
+            allTasksWithDuration.add(epic);
+        }
     }
 
     @Override
@@ -131,7 +135,9 @@ public class InMemoryTaskManager implements TaskManager {
 
         subTask.setId(id);
         subTasks.put(id, subTask);
-        allTasks.add(subTask);
+        if (subTask.duration != null || subTask.startTime != null) {
+            allTasksWithDuration.add(subTask);
+        }
         subTask.setEpicsId(epicsId);
 
         for (Epic epic : epics.values()) {
@@ -211,7 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public ArrayList<Task> getPrioritizedTasks() {
-        return new ArrayList<>(allTasks);
+        return new ArrayList<>(allTasksWithDuration);
     }
 
     public static class DataComparator implements Comparator<Task> {

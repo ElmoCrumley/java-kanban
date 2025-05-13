@@ -12,7 +12,7 @@ public class Task {
     private String description;
     private int id;
     private Status status;
-    Duration duration; // Продолжительность задачи в минутах
+    public Duration duration; // Продолжительность задачи в минутах
     public LocalDateTime startTime;
 
     public Task(String name, String description) {
