@@ -69,6 +69,16 @@ public class Task {
         this.id = id;
     }
 
+    public boolean isIntersect(Task t2) {
+        if (startTime.isBefore(t2.getStartTime())) {
+            return t2.getStartTime().isBefore(getEndTime());
+        } else if (startTime.isAfter(t2.getStartTime())) {
+            return !t2.getStartTime().isBefore(getEndTime());
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
