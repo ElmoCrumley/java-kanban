@@ -220,6 +220,11 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(allTasksWithDuration);
     }
 
+    public boolean isIntersectAny(Task t1) {
+        for (Task task : allTasksWithDuration) if (task.isIntersect(t1)) return true;
+        return false;
+    }
+
     public static class DataComparator implements Comparator<Task> {
         @Override
         public int compare(Task o1, Task o2) {
