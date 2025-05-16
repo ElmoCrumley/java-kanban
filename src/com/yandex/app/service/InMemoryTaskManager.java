@@ -5,6 +5,7 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
@@ -220,9 +221,8 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(allTasksWithDuration);
     }
 
-    public boolean isIntersectAny(Task t1) {
-        for (Task task : allTasksWithDuration) if (task.isIntersect(t1)) return true;
-        return false;
+    public boolean isIntersectAny(Task t2) {
+        return !(allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
     }
 
     public static class DataComparator implements Comparator<Task> {
