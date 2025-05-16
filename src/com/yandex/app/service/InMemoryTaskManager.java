@@ -62,10 +62,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeSubTasks() {
         historyManager.getHistory().removeAll(subTasks.values());
         subTasks.clear();
-        for (Epic epic : epics.values()) {
+        epics.values().forEach(epic -> {
             epic.getSubTasksList().clear();
             epic.setStatus(Status.valueOf(Status.NEW.name()));
-        }
+        });
     }
 
     // Получение по идентификатору.
