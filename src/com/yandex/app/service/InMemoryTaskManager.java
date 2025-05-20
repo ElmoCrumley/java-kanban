@@ -96,7 +96,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Создание.
     @Override
     public void createTask(Task task) {
-        if (!isIntersectAny(task)) {
+        if (isNotIntersectAny(task)) {
             this.id++;
 
             int id = this.id;
@@ -111,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createEpic(Epic epic) {
-        if (!isIntersectAny(epic)) {
+        if (isNotIntersectAny(epic)) {
             this.id++;
 
             int id = this.id;
@@ -126,7 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask, int epicsId) {
-        if (!isIntersectAny(subTask)) {
+        if (isNotIntersectAny(subTask)) {
             this.id++;
 
             int id = this.id;
@@ -151,14 +151,14 @@ public class InMemoryTaskManager implements TaskManager {
     // Обновление.
     @Override
     public void updateTask(Task task) {
-        if (!isIntersectAny(task)) {
+        if (isNotIntersectAny(task)) {
             tasks.put(task.getId(), task);
         }
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
-        if (!isIntersectAny(subTask)) {
+        if (isNotIntersectAny(subTask)) {
             int subTaskId = subTask.getId();
             Epic epic = epics.get(subTask.getEpicsId());
 
@@ -223,8 +223,8 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(allTasksWithDuration);
     }
 
-    public boolean isIntersectAny(Task t2) {
-        return !(allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
+    public boolean isNotIntersectAny(Task t2) {
+        return (allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
     }
 
     public static class DataComparator implements Comparator<Task> {
