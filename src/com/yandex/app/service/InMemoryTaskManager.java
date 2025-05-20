@@ -96,48 +96,54 @@ public class InMemoryTaskManager implements TaskManager {
     // Создание.
     @Override
     public void createTask(Task task) {
-        this.id++;
+        if (!isIntersectAny(task)) {
+            this.id++;
 
-        int id = this.id;
+            int id = this.id;
 
-        task.setId(id);
-        tasks.put(id, task);
-        if (task.getDuration() != null || task.getStartTime() != null) {
-            allTasksWithDuration.add(task);
+            task.setId(id);
+            tasks.put(id, task);
+            if (task.getDuration() != null || task.getStartTime() != null) {
+                allTasksWithDuration.add(task);
+            }
         }
     }
 
     @Override
     public void createEpic(Epic epic) {
-        this.id++;
+        if (!isIntersectAny(epic)) {
+            this.id++;
 
-        int id = this.id;
+            int id = this.id;
 
-        epic.setId(id);
-        epics.put(id, epic);
-        if (epic.getDuration() != null || epic.getStartTime() != null) {
-            allTasksWithDuration.add(epic);
+            epic.setId(id);
+            epics.put(id, epic);
+            if (epic.getDuration() != null || epic.getStartTime() != null) {
+                allTasksWithDuration.add(epic);
+            }
         }
     }
 
     @Override
     public void createSubTask(SubTask subTask, int epicsId) {
-        this.id++;
+        if (!isIntersectAny(subTask)) {
+            this.id++;
 
-        int id = this.id;
+            int id = this.id;
 
-        subTask.setId(id);
-        subTasks.put(id, subTask);
-        if (subTask.getDuration() != null || subTask.getStartTime() != null) {
-            allTasksWithDuration.add(subTask);
-        }
-        subTask.setEpicsId(epicsId);
+            subTask.setId(id);
+            subTasks.put(id, subTask);
+            if (subTask.getDuration() != null || subTask.getStartTime() != null) {
+                allTasksWithDuration.add(subTask);
+            }
+            subTask.setEpicsId(epicsId);
 
-        for (Epic epic : epics.values()) {
-            if (epic.getId() == epicsId) {
-                epic.addSubTaskToList(subTask);
-                epic.recalculateDuration();
-                epic.recalculateEndTime();
+            for (Epic epic : epics.values()) {
+                if (epic.getId() == epicsId) {
+                    epic.addSubTaskToList(subTask);
+                    epic.recalculateDuration();
+                    epic.recalculateEndTime();
+                }
             }
         }
     }
@@ -145,21 +151,25 @@ public class InMemoryTaskManager implements TaskManager {
     // Обновление.
     @Override
     public void updateTask(Task task) {
-        tasks.put(task.getId(), task);
+        if (!isIntersectAny(task)) {
+            tasks.put(task.getId(), task);
+        }
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
-        int subTaskId = subTask.getId();
-        Epic epic = epics.get(subTask.getEpicsId());
+        if (!isIntersectAny(subTask)) {
+            int subTaskId = subTask.getId();
+            Epic epic = epics.get(subTask.getEpicsId());
 
-        epic.getSubTasksList().remove(subTasks.get(subTaskId));
-        epic.addSubTaskToList(subTask);
-        epic.recalculateStatus();
-        epic.recalculateDuration();
-        epic.recalculateStartTime();
-        epic.recalculateEndTime();
-        subTasks.put(subTaskId, subTask);
+            epic.getSubTasksList().remove(subTasks.get(subTaskId));
+            epic.addSubTaskToList(subTask);
+            epic.recalculateStatus();
+            epic.recalculateDuration();
+            epic.recalculateStartTime();
+            epic.recalculateEndTime();
+            subTasks.put(subTaskId, subTask);
+        }
     }
 
     // Удаление по идентификатору.
