@@ -12,8 +12,8 @@ class FileBackedTaskManagerTest {
     Task task2;
     Task task3;
     File log;
-    TaskManager fileBackedtaskManager;
-    TaskManager fileBackedtaskManager2;
+    TaskManager fileBackedTaskManager;
+    TaskManager fileBackedTaskManager2;
 
 
     @BeforeEach
@@ -28,17 +28,17 @@ class FileBackedTaskManagerTest {
             throw new RuntimeException(e);
         }
 
-        fileBackedtaskManager = Managers.getDefault(log.getAbsoluteFile());
+        fileBackedTaskManager = Managers.getDefault(log.getAbsoluteFile());
     }
 
     @Test
     void createTask() throws IOException {
         assertNotNull(log);
 
-        fileBackedtaskManager.createTask(task);
-        fileBackedtaskManager.createTask(task2);
-        fileBackedtaskManager.createTask(task3);
-        System.out.println(fileBackedtaskManager.getTasksList());
+        fileBackedTaskManager.createTask(task);
+        fileBackedTaskManager.createTask(task2);
+        fileBackedTaskManager.createTask(task3);
+        System.out.println(fileBackedTaskManager.getTasksList());
 
         Reader fileReader = new FileReader(log.getAbsolutePath());
         BufferedReader br = new BufferedReader(fileReader);
@@ -49,13 +49,13 @@ class FileBackedTaskManagerTest {
         }
         fileReader.close();
         br.close();
-        fileBackedtaskManager2 = FileBackedTaskManager.loadFromFile(log);
+        fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(log);
 
-        ArrayList<Task> tasks = fileBackedtaskManager2.getTasksList();
+        ArrayList<Task> tasks = fileBackedTaskManager2.getTasksList();
 
         System.out.println(tasks);
 
-        assertEquals(fileBackedtaskManager.getTasksList().getFirst(), fileBackedtaskManager2.getTasksList().getFirst());
-        assertEquals(fileBackedtaskManager.getTasksList().getLast(), fileBackedtaskManager2.getTasksList().getLast());
+        assertEquals(fileBackedTaskManager.getTasksList().getFirst(), fileBackedTaskManager2.getTasksList().getFirst());
+        assertEquals(fileBackedTaskManager.getTasksList().getLast(), fileBackedTaskManager2.getTasksList().getLast());
     }
 }
