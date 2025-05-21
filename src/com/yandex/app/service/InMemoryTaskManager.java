@@ -224,7 +224,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public boolean isNotIntersectAny(Task t2) {
-        return (allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
+        if (!allTasksWithDuration.isEmpty()) {
+            return (allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
+        } else{
+            return true;
+        }
     }
 
     public static class DataComparator implements Comparator<Task> {
