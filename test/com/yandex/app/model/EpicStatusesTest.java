@@ -22,7 +22,7 @@ public class EpicStatusesTest  {
     int epicId;
 
     @BeforeEach
-    void beforeEach() throws IOException {
+    void beforeEach() {
         epic = new Epic("Test epic", "Test epic description");
         subTask1 = new SubTask("Test addNewSubTask1", "Test addNewSubTask1 description");
         subTask2 = new SubTask("Test addNewSubTask2", "Test addNewSubTask2 description");
