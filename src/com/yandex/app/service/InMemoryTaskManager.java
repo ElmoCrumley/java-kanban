@@ -15,16 +15,59 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = hashCode();
     HistoryManager historyManager = Managers.getDefaultHistory();
 
-    public Map<Integer, Task> getTasks() {
-        return tasks;
+    // Создание.
+    @Override
+    public void createTask(Task task) {
+        if (isNotIntersectAny(task)) {
+            this.id++;
+
+            int id = this.id;
+
+            task.setId(id);
+            tasks.put(id, task);
+            if (task.getDuration() != null || task.getStartTime() != null) {
+                allTasksWithDuration.add(task);
+            }
+        }
     }
 
-    public Map<Integer, Epic> getEpics() {
-        return epics;
+    @Override
+    public void createEpic(Epic epic) {
+        if (isNotIntersectAny(epic)) {
+            this.id++;
+
+            int id = this.id;
+
+            epic.setId(id);
+            epics.put(id, epic);
+            if (epic.getDuration() != null || epic.getStartTime() != null) {
+                allTasksWithDuration.add(epic);
+            }
+        }
     }
 
-    public Map<Integer, SubTask> getSubTasks() {
-        return subTasks;
+    @Override
+    public void createSubTask(SubTask subTask, int epicsId) {
+        if (isNotIntersectAny(subTask)) {
+            this.id++;
+
+            int id = this.id;
+
+            subTask.setId(id);
+            subTasks.put(id, subTask);
+            if (subTask.getDuration() != null || subTask.getStartTime() != null) {
+                allTasksWithDuration.add(subTask);
+            }
+            subTask.setEpicsId(epicsId);
+
+            for (Epic epic : epics.values()) {
+                if (epic.getId() == epicsId) {
+                    epic.addSubTaskToList(subTask);
+                    epic.recalculateDuration();
+                    epic.recalculateEndTime();
+                }
+            }
+        }
     }
 
     // Получение списка всех задач.
@@ -99,61 +142,6 @@ public class InMemoryTaskManager implements TaskManager {
         return subTask;
     }
 
-    // Создание.
-    @Override
-    public void createTask(Task task) {
-        if (isNotIntersectAny(task)) {
-            this.id++;
-
-            int id = this.id;
-
-            task.setId(id);
-            tasks.put(id, task);
-            if (task.getDuration() != null || task.getStartTime() != null) {
-                allTasksWithDuration.add(task);
-            }
-        }
-    }
-
-    @Override
-    public void createEpic(Epic epic) {
-        if (isNotIntersectAny(epic)) {
-            this.id++;
-
-            int id = this.id;
-
-            epic.setId(id);
-            epics.put(id, epic);
-            if (epic.getDuration() != null || epic.getStartTime() != null) {
-                allTasksWithDuration.add(epic);
-            }
-        }
-    }
-
-    @Override
-    public void createSubTask(SubTask subTask, int epicsId) {
-        if (isNotIntersectAny(subTask)) {
-            this.id++;
-
-            int id = this.id;
-
-            subTask.setId(id);
-            subTasks.put(id, subTask);
-            if (subTask.getDuration() != null || subTask.getStartTime() != null) {
-                allTasksWithDuration.add(subTask);
-            }
-            subTask.setEpicsId(epicsId);
-
-            for (Epic epic : epics.values()) {
-                if (epic.getId() == epicsId) {
-                    epic.addSubTaskToList(subTask);
-                    epic.recalculateDuration();
-                    epic.recalculateEndTime();
-                }
-            }
-        }
-    }
-
     // Обновление.
     @Override
     public void updateTask(Task task) {
@@ -215,14 +203,26 @@ public class InMemoryTaskManager implements TaskManager {
         removeEpics();
     }
 
-    // Получение списка всех подзадач определённого эпика. (дополнительный метод)
-    public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
-        return new ArrayList<>(epic.getSubTasksList());
-    }
-
     @Override
     public HistoryManager getHistoryManager() {
         return historyManager;
+    }
+
+    public Map<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public Map<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public Map<Integer, SubTask> getSubTasks() {
+        return subTasks;
+    }
+
+    // Получение списка всех подзадач определённого эпика. (дополнительный метод)
+    public static ArrayList<SubTask> getEpicsSubTasksList(Epic epic) {
+        return new ArrayList<>(epic.getSubTasksList());
     }
 
     public ArrayList<Task> getPrioritizedTasks() {
