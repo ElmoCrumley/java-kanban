@@ -12,4 +12,6 @@ public interface HistoryManager {
     public List<Task> getHistory();
 
     public void clearAllHistory();
+
+    public boolean historyIsEmpty();
 }
