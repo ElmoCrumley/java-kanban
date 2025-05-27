@@ -7,6 +7,13 @@ import com.yandex.app.model.Task;
 import java.util.ArrayList;
 
 public interface TaskManager {
+    // Создание.
+    void createTask(Task task);
+
+    void createEpic(Epic epic);
+
+    void createSubTask(SubTask subTask, int epicsId);
+
     // Получение списка всех задач.
     ArrayList<Task> getTasksList();
 
@@ -27,13 +34,6 @@ public interface TaskManager {
     Epic getEpic(int id);
 
     SubTask getSubTask(int id);
-
-    // Создание.
-    void createTask(Task task);
-
-    void createEpic(Epic epic);
-
-    void createSubTask(SubTask subTask, int epicsId);
 
     // Обновление.
     void updateTask(Task task);
