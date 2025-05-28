@@ -60,6 +60,11 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         testMultipleAssertionsWithStreamForClearAllTasks();
     }
 
+    @Test
+    public void getHistoryManagerTest() {
+        testForGetHistoryManager();
+    }
+
 //    public Map<Integer, Task> getTasks() {
 //        return tasks;
 //    }
