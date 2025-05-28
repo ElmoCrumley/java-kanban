@@ -150,8 +150,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertAll("Checking get tests for Tasks, Epics, Subtasks", executables);
     }
 
-//    @Override
-//    public HistoryManager getHistoryManager() {
-//        return historyManager;
-//    }
+    @Test
+    public void testForGetHistoryManager() {
+        HistoryManager historyManager = taskManager.getHistoryManager();
+
+        assertNotNull(historyManager);
+        assertEquals(historyManager, taskManager.getHistoryManager());
+    }
 }
