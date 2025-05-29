@@ -73,7 +73,7 @@ public class Task {
         if (startTime.isBefore(t2.getStartTime())) {
             return t2.getStartTime().isBefore(getEndTime());
         } else if (startTime.isAfter(t2.getStartTime())) {
-            return !t2.getStartTime().isBefore(getEndTime());
+            return t2.getEndTime().isAfter(getStartTime());
         } else {
             return true;
         }
