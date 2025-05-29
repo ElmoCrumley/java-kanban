@@ -23,6 +23,8 @@ public class Task {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    public void setDuration(int minutes) {
+        this.duration = Duration.ofMinutes(minutes);
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -38,7 +40,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        return startTime.plusMinutes(duration.toMinutes());
     }
 
     public String getName() {

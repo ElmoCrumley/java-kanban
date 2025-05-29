@@ -172,7 +172,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     task.setStartTime(LocalDateTime.parse(split[5]));
                 }
                 if (!split[6].equals("null")) {
-                    task.setDuration(Duration.ofMinutes(Integer.parseInt(split[6])));
+                    task.setDuration(Integer.parseInt(split[6]));
                 }
                 return task;
             case "EPIC":
@@ -183,7 +183,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     epic.setStartTime(LocalDateTime.parse(split[5]));
                 }
                 if (!split[6].equals("null")) {
-                    epic.setDuration(Duration.ofMinutes(Integer.parseInt(split[6])));
+                    epic.setDuration(Integer.parseInt(split[6]));
                 }
                 return epic;
             case "SUBTASK":
@@ -194,7 +194,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                     subTask.setStartTime(LocalDateTime.parse(split[5]));
                 }
                 if (!split[6].equals("null")) {
-                    subTask.setDuration(Duration.ofMinutes(Integer.parseInt(split[6])));
+                    subTask.setDuration(Integer.parseInt(split[6]));
                 }
                 subTask.setEpicsId(Integer.parseInt(split[7]));
                 return subTask;
