@@ -21,8 +21,6 @@ public class Task {
         this.status = Status.valueOf(Status.NEW.name());
     }
 
-    public void setDuration(Duration duration) {
-        this.duration = duration;
     public void setDuration(int minutes) {
         this.duration = Duration.ofMinutes(minutes);
     }
