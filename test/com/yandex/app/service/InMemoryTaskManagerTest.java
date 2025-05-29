@@ -155,6 +155,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
                 () -> assertEquals(taskThird, task1)
         );
 
-        assertAll("Checking dataComparator test", executables);
+        assertAll("Checking prioritization Tasks test", executables);
     }
 }
