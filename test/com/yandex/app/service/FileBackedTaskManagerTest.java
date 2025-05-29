@@ -1,44 +1,54 @@
 package com.yandex.app.service;
 
+import com.yandex.app.model.Epic;
 import com.yandex.app.model.Task;
+import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
-    Task task;
-    Task task2;
-    Task task3;
-    File log;
-    TaskManager fileBackedTaskManager;
-    TaskManager fileBackedTaskManager2;
+class FileBackedTaskManagerTest extends InMemoryTaskManager {
+//    @BeforeEach
+//    public void setUp() {
+//        taskManager = new FileBackedTaskManager();
+//        tft = new TasksForTests();
+//
+//        for (Task task : tft.tasks) {
+//            taskManager.createTask(task);
+//        }
+//        for (Epic epic : tft.epics) {
+//            taskManager.createEpic(epic);
+//        }
+//        for (int i = 0; i < tft.allSubtasks.size(); i++) {
+//            for (int j = 0; j < tft.allSubtasks.get(i).size(); j++) {
+//                taskManager.createSubTask(tft.allSubtasks.get(i).get(j), tft.epics.get(i).getId());
+//            }
+//        }
+//    }
 
+    File log;
 
     @BeforeEach
     void beforeEach() throws IOException {
-        task = new Task("Test addNewTask", "Test addNewTask description");
-        task2 = new Task("Test addNewTask", "Test addNewTask description");
-        task3 = new Task("Test addNewTask", "Test addNewTask description");
-
         try {
             log = File.createTempFile("myTempFile", ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        fileBackedTaskManager = Managers.getDefault(log.getAbsoluteFile());
+        taskManager = new FileBackedTaskManager(log.getAbsoluteFile());
     }
 
     @Test
     void createTask() throws IOException {
         assertNotNull(log);
 
-        fileBackedTaskManager.createTask(task);
-        fileBackedTaskManager.createTask(task2);
-        fileBackedTaskManager.createTask(task3);
-        System.out.println(fileBackedTaskManager.getTasksList());
+        taskManager.createTask(task);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        System.out.println(taskManager.getTasksList());
 
         Reader fileReader = new FileReader(log.getAbsolutePath());
         BufferedReader br = new BufferedReader(fileReader);
