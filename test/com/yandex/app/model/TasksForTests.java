@@ -20,8 +20,20 @@ public class TasksForTests {
     public SubTask subTask3d3 = new SubTask("Test subTask3d3", "Test subTask3d3 description");
     public List<Task> tasks = List.of(task1, task2, task3);
     public List<Epic> epics = List.of(epic1, epic2, epic3);
+    public List<SubTask> subTasks = List.of(
+            subTask3d3,
+            subTask3d2,
+            subTask3d1,
+            subTask2d3,
+            subTask2d2,
+            subTask2d1,
+            subTask1d3,
+            subTask1d2,
+            subTask1d1
+    );
     public List<SubTask> subTasks1 = List.of(subTask1d1, subTask1d2, subTask1d3);
     public List<SubTask> subTasks2 = List.of(subTask2d1, subTask2d2, subTask2d3);
     public List<SubTask> subTasks3 = List.of(subTask3d1, subTask3d2, subTask3d3);
     public List<List<SubTask>> allSubtasks = List.of(subTasks1, subTasks2, subTasks3);
+
 }
