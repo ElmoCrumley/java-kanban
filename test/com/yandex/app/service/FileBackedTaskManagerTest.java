@@ -1,71 +1,285 @@
 package com.yandex.app.service;
 
 import com.yandex.app.model.Epic;
+import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends InMemoryTaskManager {
-//    @BeforeEach
-//    public void setUp() {
-//        taskManager = new FileBackedTaskManager();
-//        tft = new TasksForTests();
-//
-//        for (Task task : tft.tasks) {
-//            taskManager.createTask(task);
-//        }
-//        for (Epic epic : tft.epics) {
-//            taskManager.createEpic(epic);
-//        }
-//        for (int i = 0; i < tft.allSubtasks.size(); i++) {
-//            for (int j = 0; j < tft.allSubtasks.get(i).size(); j++) {
-//                taskManager.createSubTask(tft.allSubtasks.get(i).get(j), tft.epics.get(i).getId());
-//            }
-//        }
-//    }
-
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     File log;
 
     @BeforeEach
-    void beforeEach() throws IOException {
+    public void setUp() throws IOException {
         try {
             log = File.createTempFile("myTempFile", ".txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        taskManager = new FileBackedTaskManager(log.getAbsoluteFile());
+        taskManager = new FileBackedTaskManager(log);
+        tft = new TasksForTests();
+
+        for (Task task : tft.tasks) {
+            taskManager.createTask(task);
+        }
+        for (Epic epic : tft.epics) {
+            taskManager.createEpic(epic);
+        }
+        for (int i = 0; i < tft.allSubtasks.size(); i++) {
+            for (int j = 0; j < tft.allSubtasks.get(i).size(); j++) {
+                taskManager.createSubTask(tft.allSubtasks.get(i).get(j), tft.epics.get(i).getId());
+            }
+        }
+    }
+
+    //General tests
+    @Test
+    public void createTaskMethodsTest() {
+        testMultipleAssertionsWithStreamForCreateAnyTask();
     }
 
     @Test
-    void createTask() throws IOException {
-        assertNotNull(log);
+    public void getTasksListMethodsTest() {
+        testMultipleAssertionsWithStreamForGetList();
+    }
 
-        taskManager.createTask(task);
+    @Test
+    public void removeAllTaskMethodsTest() {
+        testMultipleAssertionsWithStreamForRemoveAllTask();
+    }
+
+    @Test
+    public void getTaskMethodsTest() {
+        testMultipleAssertionsWithStreamForGetAnyTask();
+    }
+
+    @Test
+    public void updateTaskMethodsTest() {
+        testMultipleAssertionsWithStreamForUpdateAnyTask();
+    }
+
+    @Test
+    public void removeMethodsTest() {
+        testMultipleAssertionsWithStreamForRemove();
+    }
+
+    @Test
+    public void clearAllTasks() {
+        testMultipleAssertionsWithStreamForClearAllTasks();
+    }
+
+    @Test
+    public void getHistoryManagerTest() {
+        testForGetHistoryManager();
+    }
+
+    // InMemoryTaskManagerTest tests
+    @Test
+    public void getTasksEpicsSubTasksTests() {
+        Map<Integer, Task> tasks = taskManager.getTasks();
+        Map<Integer, Epic> epics = taskManager.getEpics();
+        Map<Integer, SubTask> subTasks = taskManager.getSubTasks();
+
+        Stream<Executable> executables = Stream.of(
+                () -> assertNotNull(tasks),
+                () -> assertNotNull(epics),
+                () -> assertNotNull(subTasks),
+                () -> assertEquals(tasks, taskManager.getTasks()),
+                () -> assertEquals(epics, taskManager.getEpics()),
+                () -> assertEquals(subTasks, taskManager.getSubTasks())
+        );
+
+        assertAll("Checking getMap tests for Tasks, Epics, Subtasks", executables);
+    }
+
+    @Test
+    public void getEpicsSubTasksListTest() {
+        ArrayList<SubTask> subTasksList1 = InMemoryTaskManager.getEpicsSubTasksList(tft.epic1);
+
+        Stream<Executable> executables = Stream.of(
+                () -> assertNotNull(subTasksList1),
+                () -> assertEquals(subTasksList1, InMemoryTaskManager.getEpicsSubTasksList(tft.epic1)),
+                () -> assertEquals(3, subTasksList1.size())
+        );
+
+        assertAll("Checking getEpicsSubTasksList test for Epics", executables);
+    }
+
+    @Test
+    public void dataComparatorTest() {
+        Task task1 = tft.task1;
+        Task task2 = tft.task2;
+        Task task3 = tft.task3;
+
+        task1.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 0)); // 00 -> 20
+        task1.setDuration(20);
+        task2.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 15)); // 15 -> 35
+        task2.setDuration(20);
+        task3.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 21)); // 21 -> 41
+        task3.setDuration(20);
+
+        Stream<Executable> executables = Stream.of(
+                () -> assertFalse(task1.isIntersect(task3)),
+                () -> assertTrue(task2.isIntersect(task1)),
+                () -> assertTrue(task2.isIntersect(task3))
+        );
+
+        assertAll("Checking dataComparator test", executables);
+    }
+
+    @Test
+    public void getPrioritizedTasksTest() {
+        Task task1 = new Task("Test task1", "Test task1 description");
+        Task task2 = new Task("Test task2", "Test task2 description");
+        Task task3 = new Task("Test task3", "Test task3 description");
+
+        task1.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 50)); // 00 -> 20
+        task1.setDuration(10);
+        task2.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 30)); // 15 -> 35
+        task2.setDuration(10);
+        task3.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 10)); // 21 -> 41
+        task3.setDuration(10);
+        taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
-        System.out.println(taskManager.getTasksList());
 
-        Reader fileReader = new FileReader(log.getAbsolutePath());
-        BufferedReader br = new BufferedReader(fileReader);
+        ArrayList<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
 
-        while (br.ready()) {
-            String split = br.readLine();
-            System.out.println(split);
-        }
-        fileReader.close();
-        br.close();
-        fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(log);
+        Task taskFirst = prioritizedTasks.get(0);
+        Task taskASecond = prioritizedTasks.get(1);
+        Task taskThird = prioritizedTasks.get(2);
 
-        ArrayList<Task> tasks = fileBackedTaskManager2.getTasksList();
+        Stream<Executable> executables = Stream.of(
+                () -> assertNotNull(prioritizedTasks),
+                () -> assertEquals(3, prioritizedTasks.size()),
+                () -> assertEquals(taskFirst, task3),
+                () -> assertEquals(taskASecond, task2),
+                () -> assertEquals(taskThird, task1)
+        );
 
-        System.out.println(tasks);
-
-        assertEquals(fileBackedTaskManager.getTasksList().getFirst(), fileBackedTaskManager2.getTasksList().getFirst());
-        assertEquals(fileBackedTaskManager.getTasksList().getLast(), fileBackedTaskManager2.getTasksList().getLast());
+        assertAll("Checking prioritization Tasks test", executables);
     }
+
+    // FileBackedTaskManagerTest tests
+    @Test
+    public void loadFromFileTest() {
+        FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(log);
+
+        Task task1new = taskManager2.getTasksList().get(0);
+        Epic epic1new = taskManager2.getEpicsList().get(0);
+        SubTask subTask1new = taskManager2.getSubTasksList().get(0);
+
+        Task task1old = taskManager.getTasksList().get(0);
+        Epic epic1old = taskManager.getEpicsList().get(0);
+        SubTask subTask1old = taskManager.getSubTasksList().get(0);
+
+        Stream<Executable> executables = Stream.of(
+                () -> assertNotNull(taskManager2),
+                () -> assertEquals(task1new, task1old),
+                () -> assertEquals(epic1new, epic1old),
+                () -> assertEquals(subTask1new, subTask1old)
+        );
+
+        assertAll("Checking prioritization Tasks test", executables);
+    }
+
+    @Test
+    public void saveTest() {
+
+        assertNotNull();
+    }
+
+//    // Запись в файл.
+//    public void save() {
+//        try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
+//            for (Task task : super.getTasksList()) {
+//                bufferedWriter.write(toString(task) + "\n");
+//            }
+//
+//            for (Epic epic : super.getEpicsList()) {
+//                bufferedWriter.write(toString(epic) + "\n");
+//            }
+//
+//            for (SubTask subTask : super.getSubTasksList()) {
+//                bufferedWriter.write(toString(subTask) + "\n");
+//            }
+//        } catch (IOException e) {
+//            throw new ManagerSaveException(e);
+//        }
+//    }
+//
+//    public String toString(Task task) {
+//        return task.getId() + ","
+//                + task.getType() + ","
+//                + task.getName() + ","
+//                + task.getStatus() + ","
+//                + task.getDescription() + ","
+//                + task.getStartTime() + ","
+//                + task.getDuration();
+//    }
+//
+//    public String toString(SubTask subTask) {
+//        return subTask.getId() + ","
+//                + subTask.getType() + ","
+//                + subTask.getName() + ","
+//                + subTask.getStatus() + ","
+//                + subTask.getDescription() + ","
+//                + subTask.getStartTime() + ","
+//                + subTask.getDuration() + ","
+//                + subTask.getEpicsId();
+//    }
+//
+//    static Task fromString(String value) {
+//        String[] split = value.split(","); // id,type,name,status,description,epic
+//        switch (split[1]) {
+//            case "TASK":
+//                Task task = new Task(split[2], split[4]);
+//                task.setId(Integer.parseInt(split[0]));
+//                task.setStatus(Status.valueOf(split[3]));
+//                if (!split[5].equals("null")) {
+//                    task.setStartTime(LocalDateTime.parse(split[5]));
+//                }
+//                if (!split[6].equals("null")) {
+//                    task.setDuration(Integer.parseInt(split[6]));
+//                }
+//                return task;
+//            case "EPIC":
+//                Epic epic = new Epic(split[2], split[4]);
+//                epic.setId(Integer.parseInt(split[0]));
+//                epic.setStatus(Status.valueOf(split[3]));
+//                if (!split[5].equals("null")) {
+//                    epic.setStartTime(LocalDateTime.parse(split[5]));
+//                }
+//                if (!split[6].equals("null")) {
+//                    epic.setDuration(Integer.parseInt(split[6]));
+//                }
+//                return epic;
+//            case "SUBTASK":
+//                SubTask subTask = new SubTask(split[2], split[4]);
+//                subTask.setId(Integer.parseInt(split[0]));
+//                subTask.setStatus(Status.valueOf(split[3]));
+//                if (!split[5].equals("null")) {
+//                    subTask.setStartTime(LocalDateTime.parse(split[5]));
+//                }
+//                if (!split[6].equals("null")) {
+//                    subTask.setDuration(Integer.parseInt(split[6]));
+//                }
+//                subTask.setEpicsId(Integer.parseInt(split[7]));
+//                return subTask;
+//            default:
+//                return null;
+//        }
+//    }
 }
