@@ -194,4 +194,11 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
         assertAll("Checking prioritization Tasks test", executables);
     }
+
+//    @Test
+//    public void testException() {
+//        assertThrows(ArithmeticException.class, () -> {
+//            int a = 10 / 0;
+//        }, "Деление на ноль должно приводить к исключению");
+//    }
 }
