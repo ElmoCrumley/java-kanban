@@ -39,4 +39,15 @@ class InMemoryHistoryManagerTest extends HistoryManagerTest {
     public void getHistoryTest() {
         testForGetHistory();
     }
+
+    @Test
+    public void clearAllHistoryTest() {
+        testForClearAllHistory();
+    }
+
+    @Test
+    public void historyIsEmpty() {
+        testForHistoryIsEmpty();
+    }
+
 }
