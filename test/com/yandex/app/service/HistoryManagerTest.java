@@ -4,10 +4,10 @@ import com.yandex.app.model.Task;
 import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.Test;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HistoryManagerTest {
+public abstract class HistoryManagerTest {
     TaskManager taskManager;
     HistoryManager historyManager;
     TasksForTests tft;
@@ -54,13 +54,23 @@ public class HistoryManagerTest {
         assertEquals(3, history.size());
     }
 
-//    @Test
-//    public void clearAllHistoryTest() {
-//
-//    }
-//
-//    @Test
-//    public void historyEsEmptyTest() {
-//
-//    }
+    @Test
+    public void testForClearAllHistory() {
+        historyManager.addTask(tft.task1);
+        historyManager.addTask(tft.task2);
+        historyManager.addTask(tft.task3);
+        historyManager.clearAllHistory();
+        assertNull(historyManager.getHistory());
+    }
+
+    @Test
+    public void testForHistoryIsEmpty() {
+        assertTrue(historyManager.historyIsEmpty());
+        historyManager.addTask(tft.task1);
+        historyManager.addTask(tft.task2);
+        historyManager.addTask(tft.task3);
+        assertFalse(historyManager.historyIsEmpty());
+        historyManager.clearAllHistory();
+        assertTrue(historyManager.historyIsEmpty());
+    }
 }
