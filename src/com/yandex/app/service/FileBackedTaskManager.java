@@ -81,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     // Запись в файл.
-    public void save() {
+    private void save() {
         try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
             for (Task task : super.getTasksList()) {
                 bufferedWriter.write(toString(task) + "\n");
@@ -99,7 +99,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public String toString(Task task) {
+    private String toString(Task task) {
         return task.getId() + ","
                 + task.getType() + ","
                 + task.getName() + ","
@@ -109,7 +109,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 + task.getDuration();
     }
 
-    public String toString(SubTask subTask) {
+    private String toString(SubTask subTask) {
         return subTask.getId() + ","
                 + subTask.getType() + ","
                 + subTask.getName() + ","
@@ -121,7 +121,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     // Восстановление данных из файла.
-    static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
         try {
@@ -160,7 +160,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    static Task fromString(String value) {
+    public static Task fromString(String value) {
         String[] split = value.split(","); // id,type,name,status,description,epic
         switch (split[1]) {
             case "TASK":
