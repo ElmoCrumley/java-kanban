@@ -11,7 +11,6 @@ import org.junit.jupiter.api.function.Executable;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -195,10 +194,11 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         assertAll("Checking prioritization Tasks test", executables);
     }
 
-//    @Test
-//    public void testException() {
-//        assertThrows(ArithmeticException.class, () -> {
-//            int a = 10 / 0;
-//        }, "Деление на ноль должно приводить к исключению");
-//    }
+    @Test
+    public void testException() {
+        log = null;
+        assertThrows(NullPointerException.class, () -> {
+            FileBackedTaskManager.loadFromFile(log);
+        }, "Нет данных для сохранения");
+    }
 }
