@@ -2,8 +2,6 @@ package com.yandex.app.model;
 
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
-
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -36,7 +34,6 @@ public class Epic extends Task {
         for (SubTask subTask : subTasksList) {
             if (subTask.getStartTime() != null) {
                 LocalDateTime subTaskStartTime = subTask.getStartTime();
-
                 if (subTaskStartTime.isBefore(super.getStartTime())) {
                     super.setStartTime(subTaskStartTime);
                 }
@@ -48,7 +45,6 @@ public class Epic extends Task {
         for (SubTask subTask : subTasksList) {
             if (subTask.getStartTime() != null && subTask.getDuration() != null) {
                 LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
-
                 if (subTaskEndTime.isAfter(endTime)) {
                     endTime = subTaskEndTime;
                 }
