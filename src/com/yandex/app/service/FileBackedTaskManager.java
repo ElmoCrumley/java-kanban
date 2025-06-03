@@ -8,10 +8,10 @@ import java.io.*;
 import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager  {
-    static File autoSave;
+    final File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
-        FileBackedTaskManager.autoSave = autoSave;
+        this.autoSave = autoSave;
     }
 
     @Override
