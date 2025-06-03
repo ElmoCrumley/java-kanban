@@ -3,9 +3,7 @@ package com.yandex.app.service;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private Map<Integer, Task> tasks = new HashMap<>();
@@ -232,7 +230,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean isNotIntersectAny(Task t2) {
         if (!allTasksWithDuration.isEmpty()) {
             return (allTasksWithDuration.stream().filter(task -> task.isIntersect(t2)).count() == 0);
-        } else{
+        } else {
             return true;
         }
     }
