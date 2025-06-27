@@ -3,6 +3,8 @@ package com.yandex.app.model;
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,11 +12,33 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    private Duration duration; // Продолжительность задачи в минутах
+    private LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.valueOf(Status.NEW.name());
+    }
+
+    public void setDuration(int minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration.toMinutes());
     }
 
     public String getName() {
@@ -43,6 +67,16 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isIntersect(Task t2) {
+        if (startTime.isBefore(t2.getStartTime())) {
+            return t2.getStartTime().isBefore(getEndTime());
+        } else if (startTime.isAfter(t2.getStartTime())) {
+            return t2.getEndTime().isAfter(getStartTime());
+        } else {
+            return true;
+        }
     }
 
     @Override

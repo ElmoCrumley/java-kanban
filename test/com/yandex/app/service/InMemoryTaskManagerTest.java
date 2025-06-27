@@ -7,27 +7,16 @@ import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-
-import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
-    File log;
-
+public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @BeforeEach
-    public void setUp() throws IOException {
-        try {
-            log = File.createTempFile("myTempFile", ".txt");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        taskManager = new FileBackedTaskManager(log);
+    public void setUp() {
+        taskManager = new InMemoryTaskManager();
         tft = new TasksForTests();
 
         for (Task task : tft.tasks) {
@@ -43,7 +32,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         }
     }
 
-    //General tests
     @Test
     public void createTaskMethodsTest() {
         testMultipleAssertionsWithStreamForCreateAnyTask();
@@ -84,7 +72,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         testForGetHistoryManager();
     }
 
-    // InMemoryTaskManagerTest tests
     @Test
     public void getTasksEpicsSubTasksTests() {
         Map<Integer, Task> tasks = taskManager.getTasks();
@@ -169,36 +156,5 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         );
 
         assertAll("Checking prioritization Tasks test", executables);
-    }
-
-    // FileBackedTaskManagerTest tests
-    @Test
-    public void loadFromFileTest() {
-        FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(log);
-
-        Task task1new = taskManager2.getTasksList().get(0);
-        Epic epic1new = taskManager2.getEpicsList().get(0);
-        SubTask subTask1new = taskManager2.getSubTasksList().get(0);
-
-        Task task1old = taskManager.getTasksList().get(0);
-        Epic epic1old = taskManager.getEpicsList().get(0);
-        SubTask subTask1old = taskManager.getSubTasksList().get(0);
-
-        Stream<Executable> executables = Stream.of(
-                () -> assertNotNull(taskManager2),
-                () -> assertEquals(task1new, task1old),
-                () -> assertEquals(epic1new, epic1old),
-                () -> assertEquals(subTask1new, subTask1old)
-        );
-
-        assertAll("Checking prioritization Tasks test", executables);
-    }
-
-    @Test
-    public void testException() {
-        log = null;
-        assertThrows(NullPointerException.class, () -> {
-            FileBackedTaskManager.loadFromFile(log);
-        }, "Нет данных для сохранения");
     }
 }

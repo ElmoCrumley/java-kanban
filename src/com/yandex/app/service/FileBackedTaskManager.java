@@ -5,12 +5,13 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
 import java.io.*;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager  {
-    static File autoSave;
+    final File autoSave;
 
     public FileBackedTaskManager(File autoSave) {
-        FileBackedTaskManager.autoSave = autoSave;
+        this.autoSave = autoSave;
     }
 
     @Override
@@ -80,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     // Запись в файл.
-    public void save() {
+    private void save() {
         try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
             for (Task task : super.getTasksList()) {
                 bufferedWriter.write(toString(task) + "\n");
@@ -98,24 +99,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public String toString(Task task) {
+    private String toString(Task task) {
         return task.getId() + ","
                 + task.getType() + ","
                 + task.getName() + ","
                 + task.getStatus() + ","
-                + task.getDescription();
+                + task.getDescription() + ","
+                + task.getStartTime() + ","
+                + task.getDuration();
     }
 
-    public String toString(SubTask subTask) {
+    private String toString(SubTask subTask) {
         return subTask.getId() + ","
+                + subTask.getType() + ","
                 + subTask.getName() + ","
                 + subTask.getStatus() + ","
                 + subTask.getDescription() + ","
+                + subTask.getStartTime() + ","
+                + subTask.getDuration() + ","
                 + subTask.getEpicsId();
     }
 
     // Восстановление данных из файла.
-    static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
         try {
@@ -154,24 +160,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    static Task fromString(String value) {
+    public static Task fromString(String value) {
         String[] split = value.split(","); // id,type,name,status,description,epic
         switch (split[1]) {
             case "TASK":
                 Task task = new Task(split[2], split[4]);
                 task.setId(Integer.parseInt(split[0]));
                 task.setStatus(Status.valueOf(split[3]));
+                if (!split[5].equals("null")) {
+                    task.setStartTime(LocalDateTime.parse(split[5]));
+                }
+                if (!split[6].equals("null")) {
+                    task.setDuration(Integer.parseInt(split[6]));
+                }
                 return task;
             case "EPIC":
                 Epic epic = new Epic(split[2], split[4]);
                 epic.setId(Integer.parseInt(split[0]));
                 epic.setStatus(Status.valueOf(split[3]));
+                if (!split[5].equals("null")) {
+                    epic.setStartTime(LocalDateTime.parse(split[5]));
+                }
+                if (!split[6].equals("null")) {
+                    epic.setDuration(Integer.parseInt(split[6]));
+                }
                 return epic;
             case "SUBTASK":
                 SubTask subTask = new SubTask(split[2], split[4]);
                 subTask.setId(Integer.parseInt(split[0]));
                 subTask.setStatus(Status.valueOf(split[3]));
-                subTask.setEpicsId(Integer.parseInt(split[5]));
+                if (!split[5].equals("null")) {
+                    subTask.setStartTime(LocalDateTime.parse(split[5]));
+                }
+                if (!split[6].equals("null")) {
+                    subTask.setDuration(Integer.parseInt(split[6]));
+                }
+                subTask.setEpicsId(Integer.parseInt(split[7]));
                 return subTask;
             default:
                 return null;

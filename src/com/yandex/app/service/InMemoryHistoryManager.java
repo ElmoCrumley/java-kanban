@@ -30,15 +30,25 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        int size = historyLinkedList.getSize();
-        ArrayList<Task> historyList = new ArrayList<>(size);
-        Node<Task> currentNode = historyLinkedList.head.next;
+        if (!historyMap.isEmpty()) {
+            int size = historyLinkedList.getSize();
+            ArrayList<Task> historyList = new ArrayList<>(size);
+            Node<Task> currentNode = historyLinkedList.head.next;
 
-        while (currentNode != historyLinkedList.tail) {
-            historyList.add(currentNode.data);
-            currentNode = currentNode.next;
+            while (currentNode != historyLinkedList.tail) {
+                historyList.add(currentNode.data);
+                currentNode = currentNode.next;
+            }
+            return historyList;
+        } else {
+            return null;
         }
-        return historyList;
+    }
+
+    @Override
+    public void clearAllHistory() {
+        historyMap.clear();
+        historyLinkedList.clear();
     }
 
     public void removeNode(Node node) {
@@ -47,10 +57,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    @Override
-    public void clearAllHistory() {
-        historyMap.clear();
-        historyLinkedList.clear();
+    public boolean historyIsEmpty() {
+        return historyMap.isEmpty();
     }
 
     public static class DoublyLinkedList<T> {
