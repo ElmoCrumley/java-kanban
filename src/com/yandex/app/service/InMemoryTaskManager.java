@@ -26,6 +26,8 @@ public class InMemoryTaskManager implements TaskManager {
             if (task.getDuration() != null || task.getStartTime() != null) {
                 allTasksWithDuration.add(task);
             }
+        } else {
+            throw new RuntimeException();
         }
     }
 
@@ -41,6 +43,8 @@ public class InMemoryTaskManager implements TaskManager {
             if (epic.getDuration() != null || epic.getStartTime() != null) {
                 allTasksWithDuration.add(epic);
             }
+        } else {
+            throw new RuntimeException();
         }
     }
 
@@ -65,6 +69,8 @@ public class InMemoryTaskManager implements TaskManager {
                     epic.recalculateEndTime();
                 }
             }
+        } else {
+            throw new RuntimeException();
         }
     }
 
@@ -145,6 +151,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) {
         if (isNotIntersectAny(task)) {
             tasks.put(task.getId(), task);
+        } else {
+            throw new RuntimeException();
         }
     }
 
@@ -161,6 +169,8 @@ public class InMemoryTaskManager implements TaskManager {
             epic.recalculateStartTime();
             epic.recalculateEndTime();
             subTasks.put(subTaskId, subTask);
+        } else {
+            throw new RuntimeException();
         }
     }
 
