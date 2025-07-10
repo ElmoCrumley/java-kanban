@@ -24,8 +24,11 @@ public class HttpTaskServer {
     public static void main(String[] args) throws IOException {
         File log = File.createTempFile("myTempFile", ".txt");
         TaskManager taskManager = Managers.getDefault(log);
+        start(taskManager, 8080);
+    }
 
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+    public static void start(TaskManager taskManager, int port) throws IOException {
+        HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
 
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
         httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
@@ -33,6 +36,7 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler(taskManager));
         httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
         httpServer.start();
+        System.out.println("Сервер запущен. Порт " + port + ".");
     }
 }
 
