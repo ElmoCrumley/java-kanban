@@ -9,6 +9,7 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.service.InMemoryTaskManager;
 import com.yandex.app.service.Managers;
+import com.yandex.app.service.NotFoundException;
 import com.yandex.app.service.TaskManager;
 
 import java.io.File;
@@ -48,9 +49,9 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
         String id = path.split("/")[2];
         Gson gson = new Gson();
 
-        switch(httpExchange.getRequestMethod()) {
-            case "GET":
-                try {
+        try {
+            switch(httpExchange.getRequestMethod()) {
+                case "GET":
                     if (id != null) {
                         Task task = taskManager.getTask(Integer.parseInt(id));
                         sendText(httpExchange, gson.toJson(task));
@@ -58,16 +59,12 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
                         ArrayList<Task> tasksList = taskManager.getTasksList();
                         sendText(httpExchange, gson.toJson(tasksList));
                     }
-                } catch (RuntimeException e) {
-                    sendNotFound(httpExchange);
-                }
-            case "POST":
-                // body
-                InputStream inputStream = httpExchange.getRequestBody();
-                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                Task task = gson.fromJson(jsonTask, Task.class);
+                case "POST":
+                    // body
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    Task task = gson.fromJson(jsonTask, Task.class);
 
-                try {
                     if (id != null) {
                         taskManager.updateTask(task);
                         sendText(httpExchange, 201);
@@ -75,16 +72,18 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
                         taskManager.createTask(task);
                         sendText(httpExchange, 201);
                     }
-                } catch (RuntimeException e) {
-                    sendHasOverlaps(httpExchange);
-                }
-            case "DELETE":
-                if (id != null) {
-                    taskManager.removeTask(Integer.parseInt(id));
-                    sendText(httpExchange, 200);
-                }
-            default:
-                break;
+                case "DELETE":
+                    if (id != null) {
+                        taskManager.removeTask(Integer.parseInt(id));
+                        sendText(httpExchange, 200);
+                    }
+                default:
+                    break;
+            }
+        } catch (NotFoundException ignored) {
+            sendNotFound(httpExchange);
+        } catch (RuntimeException ignored) {
+            sendHasOverlaps(httpExchange);
         }
     }
 }
@@ -102,9 +101,9 @@ class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
         String id = path.split("/")[2];
         Gson gson = new Gson();
 
-        switch(httpExchange.getRequestMethod()) {
-            case "GET":
-                try {
+        try {
+            switch(httpExchange.getRequestMethod()) {
+                case "GET":
                     if (id != null) {
                         SubTask subTask = taskManager.getSubTask(Integer.parseInt(id));
                         sendText(httpExchange, gson.toJson(subTask));
@@ -112,17 +111,13 @@ class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                         ArrayList<SubTask> subTasksList = taskManager.getSubTasksList();
                         sendText(httpExchange, gson.toJson(subTasksList));
                     }
-                } catch (RuntimeException e) {
-                    sendNotFound(httpExchange);
-                }
-            case "POST":
-                // body
-                InputStream inputStream = httpExchange.getRequestBody();
-                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                SubTask subTask = gson.fromJson(jsonTask, SubTask.class);
-                String epicsId = path.split("/")[3];
+                case "POST":
+                    // body
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    SubTask subTask = gson.fromJson(jsonTask, SubTask.class);
+                    String epicsId = path.split("/")[3];
 
-                try {
                     if (id != null) {
                         taskManager.updateSubTask(subTask);
                         sendText(httpExchange, 201);
@@ -130,16 +125,18 @@ class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                         taskManager.createSubTask(subTask, Integer.parseInt(epicsId));
                         sendText(httpExchange, 201);
                     }
-                } catch (RuntimeException e) {
-                    sendHasOverlaps(httpExchange);
-                }
-            case "DELETE":
-                if (id != null) {
-                    taskManager.removeSubTask(Integer.parseInt(id));
-                    sendText(httpExchange, 200);
-                }
-            default:
-                break;
+                case "DELETE":
+                    if (id != null) {
+                        taskManager.removeSubTask(Integer.parseInt(id));
+                        sendText(httpExchange, 200);
+                    }
+                default:
+                    break;
+            }
+        } catch (NotFoundException ignored) {
+            sendNotFound(httpExchange);
+        } catch (RuntimeException ignored) {
+            sendHasOverlaps(httpExchange);
         }
     }
 }
@@ -159,38 +156,40 @@ class EpicsHandler extends BaseHttpHandler implements HttpHandler {
 
         Gson gson = new Gson();
 
-        switch(httpExchange.getRequestMethod()) {
-            case "GET":
-                try {
-                     if (id != null && subtasks != null) {
-                         Epic epic = taskManager.getEpic(Integer.parseInt(id));
-                         ArrayList<SubTask> subTasksList = InMemoryTaskManager.getEpicsSubTasksList(epic);
-                         sendText(httpExchange, gson.toJson(subTasksList));
-                     } else if (id == null && subtasks == null) {
+        try {
+            switch(httpExchange.getRequestMethod()) {
+                case "GET":
+                    if (id != null && subtasks != null) {
+                        Epic epic = taskManager.getEpic(Integer.parseInt(id));
+                        ArrayList<SubTask> subTasksList = InMemoryTaskManager.getEpicsSubTasksList(epic);
+                        sendText(httpExchange, gson.toJson(subTasksList));
+                    } else if (id == null && subtasks == null) {
                         ArrayList<Epic> epicsList = taskManager.getEpicsList();
                         sendText(httpExchange, gson.toJson(epicsList));
-                     } else if (id != null) {
+                    } else if (id != null) {
                         Epic epic = taskManager.getEpic(Integer.parseInt(id));
                         sendText(httpExchange, gson.toJson(epic));
-                     }
-                } catch (RuntimeException e) {
-                    sendNotFound(httpExchange);
-                }
-            case "POST":
-                // body
-                InputStream inputStream = httpExchange.getRequestBody();
-                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                Epic epic = gson.fromJson(jsonTask, Epic.class);
+                    }
+                case "POST":
+                    // body
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    Epic epic = gson.fromJson(jsonTask, Epic.class);
 
-                taskManager.createEpic(epic);
-                sendText(httpExchange, 201);
-            case "DELETE":
-                if (id != null) {
-                    taskManager.removeSubTask(Integer.parseInt(id));
-                    sendText(httpExchange, 200);
-                }
-            default:
-                break;
+                    taskManager.createEpic(epic);
+                    sendText(httpExchange, 201);
+                case "DELETE":
+                    if (id != null) {
+                        taskManager.removeSubTask(Integer.parseInt(id));
+                        sendText(httpExchange, 200);
+                    }
+                default:
+                    break;
+            }
+        } catch (NotFoundException ignored) {
+            sendNotFound(httpExchange);
+        } catch (RuntimeException ignored) {
+            sendHasOverlaps(httpExchange);
         }
     }
 }
