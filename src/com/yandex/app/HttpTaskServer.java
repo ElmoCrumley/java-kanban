@@ -5,16 +5,19 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.yandex.app.model.Task;
+import com.yandex.app.model.Epic;
+import com.yandex.app.model.SubTask;
+import com.yandex.app.service.InMemoryTaskManager;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HttpTaskServer {
     public static void main(String[] args) throws IOException {
@@ -29,12 +32,10 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler(taskManager));
         httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
         httpServer.start();
-
-
     }
 }
 
-class TasksHandler implements HttpHandler {
+class TasksHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
     TasksHandler(TaskManager taskManager) {
@@ -43,88 +44,52 @@ class TasksHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String response;
+        String path = httpExchange.getRequestURI().getPath();
+        String id = path.split("/")[2];
+        Gson gson = new Gson();
 
         switch(httpExchange.getRequestMethod()) {
             case "GET":
-                response = handleGetRequest(httpExchange);
+                try {
+                    if (id != null) {
+                        Task task = taskManager.getTask(Integer.parseInt(id));
+                        sendText(httpExchange, gson.toJson(task));
+                    } else {
+                        ArrayList<Task> tasksList = taskManager.getTasksList();
+                        sendText(httpExchange, gson.toJson(tasksList));
+                    }
+                } catch (RuntimeException e) {
+                    sendNotFound(httpExchange);
+                }
             case "POST":
-                response = handlePostRequest(httpExchange);
+                // body
+                InputStream inputStream = httpExchange.getRequestBody();
+                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                Task task = gson.fromJson(jsonTask, Task.class);
+
+                try {
+                    if (id != null) {
+                        taskManager.updateTask(task);
+                        sendText(httpExchange, 201);
+                    } else {
+                        taskManager.createTask(task);
+                        sendText(httpExchange, 201);
+                    }
+                } catch (RuntimeException e) {
+                    sendHasOverlaps(httpExchange);
+                }
             case "DELETE":
-                response = handleDeleteRequest(httpExchange);
+                if (id != null) {
+                    taskManager.removeTask(Integer.parseInt(id));
+                    sendText(httpExchange, 200);
+                }
             default:
-                response = "Некорректный метод!";
+                break;
         }
-
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
-    }
-
-    String handleGetRequest(HttpExchange httpExchange) throws IOException {
-        // path
-        String path = httpExchange.getRequestURI().getPath();
-        String id = path.split("/")[2];
-        // for serialization
-        Gson gson = new Gson();
-
-        try {
-            if (id != null) {
-                Task task = taskManager.getTask(Integer.parseInt(id));
-                httpExchange.sendResponseHeaders(200, 0);
-                return gson.toJson(task);
-            } else {
-                ArrayList<Task> tasksList = taskManager.getTasksList();
-                httpExchange.sendResponseHeaders(200, 0);
-                return gson.toJson(tasksList);
-            }
-        } catch (RuntimeException e) {
-            httpExchange.sendResponseHeaders(404, 0);
-            return "Not Found";
-        }
-    }
-
-    String handlePostRequest(HttpExchange httpExchange) throws IOException {
-        // path
-        String path = httpExchange.getRequestURI().getPath();
-        String id = path.split("/")[2];
-        // body
-        InputStream inputStream = httpExchange.getRequestBody();
-        String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        // deserialization
-        Gson gson = new Gson();
-        Task task = gson.fromJson(jsonTask, Task.class);
-
-        try {
-            if (id != null) {
-                taskManager.updateTask(task);
-                httpExchange.sendResponseHeaders(201, 0);
-                return "";
-            } else {
-                taskManager.createTask(task);
-                httpExchange.sendResponseHeaders(201, 0);
-                return "";
-            }
-        } catch (RuntimeException e) {
-            httpExchange.sendResponseHeaders(406, 0);
-            return "Not Acceptable";
-        }
-    }
-
-    String handleDeleteRequest(HttpExchange httpExchange) throws IOException {
-        // path
-        String path = httpExchange.getRequestURI().getPath();
-        String id = path.split("/")[2];
-        // for serialization
-        Gson gson = new Gson();
-
-        taskManager.removeTask(Integer.parseInt(id));
-        httpExchange.sendResponseHeaders(200, 0);
-        return "";
     }
 }
 
-class SubtasksHandler implements HttpHandler {
+class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
     public SubtasksHandler(TaskManager taskManager) {
@@ -133,11 +98,53 @@ class SubtasksHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        String path = httpExchange.getRequestURI().getPath();
+        String id = path.split("/")[2];
+        Gson gson = new Gson();
 
+        switch(httpExchange.getRequestMethod()) {
+            case "GET":
+                try {
+                    if (id != null) {
+                        SubTask subTask = taskManager.getSubTask(Integer.parseInt(id));
+                        sendText(httpExchange, gson.toJson(subTask));
+                    } else {
+                        ArrayList<SubTask> subTasksList = taskManager.getSubTasksList();
+                        sendText(httpExchange, gson.toJson(subTasksList));
+                    }
+                } catch (RuntimeException e) {
+                    sendNotFound(httpExchange);
+                }
+            case "POST":
+                // body
+                InputStream inputStream = httpExchange.getRequestBody();
+                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                SubTask subTask = gson.fromJson(jsonTask, SubTask.class);
+                String epicsId = path.split("/")[3];
+
+                try {
+                    if (id != null) {
+                        taskManager.updateSubTask(subTask);
+                        sendText(httpExchange, 201);
+                    } else {
+                        taskManager.createSubTask(subTask, Integer.parseInt(epicsId));
+                        sendText(httpExchange, 201);
+                    }
+                } catch (RuntimeException e) {
+                    sendHasOverlaps(httpExchange);
+                }
+            case "DELETE":
+                if (id != null) {
+                    taskManager.removeSubTask(Integer.parseInt(id));
+                    sendText(httpExchange, 200);
+                }
+            default:
+                break;
+        }
     }
 }
 
-class EpicsHandler implements HttpHandler {
+class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
     public EpicsHandler(TaskManager taskManager) {
@@ -146,11 +153,49 @@ class EpicsHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        String path = httpExchange.getRequestURI().getPath();
+        String id = path.split("/")[2];
+        String subtasks = path.split("/")[3];
 
+        Gson gson = new Gson();
+
+        switch(httpExchange.getRequestMethod()) {
+            case "GET":
+                try {
+                     if (id != null && subtasks != null) {
+                         Epic epic = taskManager.getEpic(Integer.parseInt(id));
+                         ArrayList<SubTask> subTasksList = InMemoryTaskManager.getEpicsSubTasksList(epic);
+                         sendText(httpExchange, gson.toJson(subTasksList));
+                     } else if (id == null && subtasks == null) {
+                        ArrayList<Epic> epicsList = taskManager.getEpicsList();
+                        sendText(httpExchange, gson.toJson(epicsList));
+                     } else if (id != null) {
+                        Epic epic = taskManager.getEpic(Integer.parseInt(id));
+                        sendText(httpExchange, gson.toJson(epic));
+                     }
+                } catch (RuntimeException e) {
+                    sendNotFound(httpExchange);
+                }
+            case "POST":
+                // body
+                InputStream inputStream = httpExchange.getRequestBody();
+                String jsonTask = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                Epic epic = gson.fromJson(jsonTask, Epic.class);
+
+                taskManager.createEpic(epic);
+                sendText(httpExchange, 201);
+            case "DELETE":
+                if (id != null) {
+                    taskManager.removeSubTask(Integer.parseInt(id));
+                    sendText(httpExchange, 200);
+                }
+            default:
+                break;
+        }
     }
 }
 
-class HistoryHandler implements HttpHandler {
+class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
     public HistoryHandler(TaskManager taskManager) {
@@ -159,11 +204,14 @@ class HistoryHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        Gson gson = new Gson();
+        List<Task> history = taskManager.getHistoryManager().getHistory();
 
+        sendText(httpExchange, gson.toJson(history));
     }
 }
 
-class PrioritizedHandler implements HttpHandler {
+class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
     public PrioritizedHandler(TaskManager taskManager) {
@@ -172,6 +220,40 @@ class PrioritizedHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        Gson gson = new Gson();
+        ArrayList<Task> history = taskManager.getPrioritizedTasks();
 
+        sendText(httpExchange, gson.toJson(history));
+    }
+}
+
+class BaseHttpHandler {
+    protected void sendText(HttpExchange h, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        h.sendResponseHeaders(200, resp.length);
+        h.getResponseBody().write(resp);
+        h.close();
+    }
+
+    protected void sendText(HttpExchange h, int code) throws IOException {
+        h.sendResponseHeaders(code, 0);
+        h.close();
+    }
+
+    protected void sendNotFound(HttpExchange h) throws IOException {
+        byte[] resp = "Not Found".getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        h.sendResponseHeaders(404, resp.length);
+        h.getResponseBody().write(resp);
+        h.close();
+    }
+
+    protected void sendHasOverlaps(HttpExchange h) throws IOException {
+        byte[] resp = "Not Acceptable".getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        h.sendResponseHeaders(406, resp.length);
+        h.getResponseBody().write(resp);
+        h.close();
     }
 }
