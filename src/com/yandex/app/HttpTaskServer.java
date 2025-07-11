@@ -8,11 +8,9 @@ import com.yandex.app.model.Task;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.service.InMemoryTaskManager;
-import com.yandex.app.service.Managers;
 import com.yandex.app.service.NotFoundException;
 import com.yandex.app.service.TaskManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -21,22 +19,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpTaskServer {
-    public static void main(String[] args) throws IOException {
-        File log = File.createTempFile("myTempFile", ".txt");
-        TaskManager taskManager = Managers.getDefault(log);
-        start(taskManager, 8080);
+    TaskManager taskManager;
+    HttpServer httpServer;
+
+    public HttpTaskServer(TaskManager taskManager) {
+        this.taskManager = taskManager;
     }
 
-    public static void start(TaskManager taskManager, int port) throws IOException {
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+    public static void main(String[] args) throws IOException {
+        TaskManager taskManager = new InMemoryTaskManager();
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        httpTaskServer.start();
+    }
 
-        httpServer.createContext("/tasks", new TasksHandler(taskManager));
-        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
-        httpServer.createContext("/epics", new EpicsHandler(taskManager));
-        httpServer.createContext("/history", new HistoryHandler(taskManager));
-        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
+    public void start() throws IOException {
+        httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+        httpServer.createContext("/tasks", new TasksHandler(this.taskManager));
+        httpServer.createContext("/subtasks", new SubtasksHandler(this.taskManager));
+        httpServer.createContext("/epics", new EpicsHandler(this.taskManager));
+        httpServer.createContext("/history", new HistoryHandler(this.taskManager));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(this.taskManager));
         httpServer.start();
-        System.out.println("Сервер запущен. Порт " + port + ".");
+        System.out.println("Сервер запущен. Порт 8080.");
+    }
+
+    public void stop() {
+        httpServer.stop(0);
     }
 }
 
