@@ -1,6 +1,6 @@
 package com.yandex.app;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -40,18 +40,21 @@ public class HttpTaskServer {
         httpServer.createContext("/history", new HistoryHandler(this.taskManager));
         httpServer.createContext("/prioritized", new PrioritizedHandler(this.taskManager));
         httpServer.start();
-        System.out.println("Сервер запущен. Порт 8080.");
     }
 
     public void stop() {
         httpServer.stop(0);
+    }
+
+    public static Gson getGson() {
+        return new Gson();
     }
 }
 
 class TasksHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
-    TasksHandler(TaskManager taskManager) {
+    public TasksHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
