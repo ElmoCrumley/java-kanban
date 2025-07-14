@@ -7,6 +7,7 @@ import com.yandex.app.model.Task;
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager  {
     final File autoSave;
@@ -83,17 +84,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Запись в файл.
     private void save() {
+        List<Task> tasks = null;
+        List<Epic> epics = null;
+        List<SubTask> subTasks = null;
+
+        try {
+            tasks = super.getTasksList();
+            epics = super.getEpicsList();
+            subTasks = super.getSubTasksList();
+        } catch (NotFoundException ignored) {
+
+        }
+
         try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
-            for (Task task : super.getTasksList()) {
-                bufferedWriter.write(toString(task) + "\n");
+            if (tasks != null) {
+                for (Task task : super.getTasksList()) {
+                    bufferedWriter.write(toString(task) + "\n");
+                }
             }
 
-            for (Epic epic : super.getEpicsList()) {
-                bufferedWriter.write(toString(epic) + "\n");
+            if (epics != null) {
+                for (Epic epic : super.getEpicsList()) {
+                    bufferedWriter.write(toString(epic) + "\n");
+                }
             }
 
-            for (SubTask subTask : super.getSubTasksList()) {
-                bufferedWriter.write(toString(subTask) + "\n");
+            if (subTasks != null) {
+                for (SubTask subTask : super.getSubTasksList()) {
+                    bufferedWriter.write(toString(subTask) + "\n");
+                }
             }
         } catch (IOException e) {
             throw new ManagerSaveException(e);
