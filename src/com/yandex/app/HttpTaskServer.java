@@ -40,4 +40,3 @@ public class HttpTaskServer {
         return new Gson();
     }
 }
-
