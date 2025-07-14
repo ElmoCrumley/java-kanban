@@ -45,7 +45,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void removeAllTaskMethodsTest() {
-        testMultipleAssertionsWithStreamForRemoveAllTask();
+        testAssertionsWithStreamForRemoveAllTask();
     }
 
     @Test
@@ -65,7 +65,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void clearAllTasks() {
-        testMultipleAssertionsWithStreamForClearAllTasks();
+        testAssertionsWithStreamForClearAllTasks();
     }
 
     @Test
@@ -128,9 +128,24 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void getPrioritizedTasksTest() {
-        Task task1 = new Task("Test task1", "Test task1 description", Duration.ofMinutes(0), LocalDateTime.now());
-        Task task2 = new Task("Test task2", "Test task2 description", Duration.ofMinutes(0), LocalDateTime.now());
-        Task task3 = new Task("Test task3", "Test task3 description", Duration.ofMinutes(0), LocalDateTime.now());
+        Task task1 = new Task(
+                "Test task1",
+                "Test task1 description",
+                Duration.ofMinutes(0),
+                LocalDateTime.now()
+        );
+        Task task2 = new Task(
+                "Test task2",
+                "Test task2 description",
+                Duration.ofMinutes(0),
+                LocalDateTime.now()
+        );
+        Task task3 = new Task(
+                "Test task3",
+                "Test task3 description",
+                Duration.ofMinutes(0),
+                LocalDateTime.now()
+        );
 
         task1.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 50)); // 00 -> 20
         task1.setDuration(Duration.ofMinutes(10));
