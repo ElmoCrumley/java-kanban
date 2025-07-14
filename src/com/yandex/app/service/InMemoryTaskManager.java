@@ -23,7 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
 
             task.setId(id);
             tasks.put(id, task);
-            if (task.getDuration() != null || task.getStartTime() != null) {
+            if (task.getDuration().toMinutes() != 0 && task.getStartTime() != null) {
                 allTasksWithDuration.add(task);
             }
         } else {
@@ -40,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
 
             epic.setId(id);
             epics.put(id, epic);
-            if (epic.getDuration() != null || epic.getStartTime() != null) {
+            if (epic.getDuration().toMinutes() != 0 && epic.getStartTime() != null) {
                 allTasksWithDuration.add(epic);
             }
         } else {
@@ -57,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
 
             subTask.setId(id);
             subTasks.put(id, subTask);
-            if (subTask.getDuration() != null || subTask.getStartTime() != null) {
+            if (subTask.getDuration().toMinutes() != 0 && subTask.getStartTime() != null) {
                 allTasksWithDuration.add(subTask);
             }
             subTask.setEpicsId(epicsId);
