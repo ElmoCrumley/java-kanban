@@ -57,7 +57,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void removeAllTaskMethodsTest() {
-        testMultipleAssertionsWithStreamForRemoveAllTask();
+        testAssertionsWithStreamForRemoveAllTask();
     }
 
     @Test
@@ -77,7 +77,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void clearAllTasks() {
-        testMultipleAssertionsWithStreamForClearAllTasks();
+        testAssertionsWithStreamForClearAllTasks();
     }
 
     @Test
