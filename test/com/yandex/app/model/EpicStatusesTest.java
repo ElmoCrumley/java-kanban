@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +25,10 @@ public class EpicStatusesTest  {
 
     @BeforeEach
     void beforeEach() {
-        epic = new Epic("Test epic", "Test epic description");
-        subTask1 = new SubTask("Test addNewSubTask1", "Test addNewSubTask1 description");
-        subTask2 = new SubTask("Test addNewSubTask2", "Test addNewSubTask2 description");
-        subTask3 = new SubTask("Test addNewSubTask3", "Test addNewSubTask3 description");
+        epic = new Epic("Test epic", "Test epic description", Duration.ofMinutes(0), LocalDateTime.now());
+        subTask1 = new SubTask("Test addNewSubTask1", "Test addNewSubTask1 description", Duration.ofMinutes(0), LocalDateTime.now());
+        subTask2 = new SubTask("Test addNewSubTask2", "Test addNewSubTask2 description", Duration.ofMinutes(0), LocalDateTime.now());
+        subTask3 = new SubTask("Test addNewSubTask3", "Test addNewSubTask3 description", Duration.ofMinutes(0), LocalDateTime.now());
 
         subTasks = List.of(subTask1, subTask2, subTask3);
 

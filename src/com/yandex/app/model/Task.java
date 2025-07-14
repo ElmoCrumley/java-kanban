@@ -15,22 +15,56 @@ public class Task {
     private Duration duration; // Продолжительность задачи в минутах
     private LocalDateTime startTime;
 
-    public Task(String name, String description) {
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = Status.valueOf(Status.NEW.name());
-    }
-
-    public void setDuration(int minutes) {
-        this.duration = Duration.ofMinutes(minutes);
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
+        this.duration = duration;
         this.startTime = startTime;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Object getStatus() {
+        return status;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public Duration getDuration() {
         return duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public LocalDateTime getStartTime() {
@@ -41,32 +75,8 @@ public class Task {
         return startTime.plusMinutes(duration.toMinutes());
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Object getStatus() {
-        return status;
-    }
-
     public Type getType() {
         return Type.valueOf(Type.TASK.name());
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public boolean isIntersect(Task t2) {

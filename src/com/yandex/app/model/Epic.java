@@ -2,6 +2,8 @@ package com.yandex.app.model;
 
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -10,8 +12,8 @@ public class Epic extends Task {
     private final ArrayList<SubTask> subTasksList = new ArrayList<>();
     private LocalDateTime endTime;
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(String name, String description, Duration duration, LocalDateTime startTime) {
+        super(name, description, duration, startTime);
     }
 
     @Override
@@ -21,7 +23,7 @@ public class Epic extends Task {
 
     public void recalculateDuration() {
         if (super.getDuration() != null) {
-            super.setDuration(0);
+            super.setDuration(Duration.ofMinutes(0));
             for (SubTask subTask : subTasksList) {
                 if (subTask.getDuration() != null) {
                     super.getDuration().plus(subTask.getDuration());

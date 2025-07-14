@@ -7,6 +7,7 @@ import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
@@ -110,11 +111,11 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         Task task3 = tft.task3;
 
         task1.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 0)); // 00 -> 20
-        task1.setDuration(20);
+        task1.setDuration(Duration.ofMinutes(20));
         task2.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 15)); // 15 -> 35
-        task2.setDuration(20);
+        task2.setDuration(Duration.ofMinutes(20));
         task3.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 21)); // 21 -> 41
-        task3.setDuration(20);
+        task3.setDuration(Duration.ofMinutes(20));
 
         Stream<Executable> executables = Stream.of(
                 () -> assertFalse(task1.isIntersect(task3)),
@@ -127,16 +128,16 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void getPrioritizedTasksTest() {
-        Task task1 = new Task("Test task1", "Test task1 description");
-        Task task2 = new Task("Test task2", "Test task2 description");
-        Task task3 = new Task("Test task3", "Test task3 description");
+        Task task1 = new Task("Test task1", "Test task1 description", Duration.ofMinutes(0), LocalDateTime.now());
+        Task task2 = new Task("Test task2", "Test task2 description", Duration.ofMinutes(0), LocalDateTime.now());
+        Task task3 = new Task("Test task3", "Test task3 description", Duration.ofMinutes(0), LocalDateTime.now());
 
         task1.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 50)); // 00 -> 20
-        task1.setDuration(10);
+        task1.setDuration(Duration.ofMinutes(10));
         task2.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 30)); // 15 -> 35
-        task2.setDuration(10);
+        task2.setDuration(Duration.ofMinutes(10));
         task3.setStartTime(LocalDateTime.of(2025, 1, 1, 11, 10)); // 21 -> 41
-        task3.setDuration(10);
+        task3.setDuration(Duration.ofMinutes(10));
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
