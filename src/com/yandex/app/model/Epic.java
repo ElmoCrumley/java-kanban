@@ -22,10 +22,10 @@ public class Epic extends Task {
     }
 
     public void recalculateDuration() {
-        if (super.getDuration() != null) {
+        if (super.getDuration().toMinutes() != 0) {
             super.setDuration(Duration.ofMinutes(0));
             for (SubTask subTask : subTasksList) {
-                if (subTask.getDuration() != null) {
+                if (subTask.getDuration().toMinutes() != 0) {
                     super.getDuration().plus(subTask.getDuration());
                 }
             }
@@ -45,7 +45,7 @@ public class Epic extends Task {
 
     public void recalculateEndTime() {
         for (SubTask subTask : subTasksList) {
-            if (subTask.getStartTime() != null && subTask.getDuration() != null) {
+            if (subTask.getStartTime() != null && subTask.getDuration().toMinutes() != 0) {
                 LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
                 if (subTaskEndTime.isAfter(endTime)) {
                     endTime = subTaskEndTime;
