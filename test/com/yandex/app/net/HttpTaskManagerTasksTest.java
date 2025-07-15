@@ -1,4 +1,4 @@
-package com.yandex.app;
+package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.yandex.app.model.Task;
@@ -31,7 +31,7 @@ class HttpTaskManagerTasksTest {
         taskManager.removeTasks();
         taskManager.removeEpics();
         tft = new TasksForTests();
-        gson = new Gson();
+        gson = HttpTaskServer.getGson();
         httpTaskServer.start();
     }
 
@@ -44,18 +44,22 @@ class HttpTaskManagerTasksTest {
     public void tasksPostCreateTaskTest()  throws IOException, InterruptedException  {
         Task task1 = tft.task1;
         String taskJson = gson.toJson(task1);
+        URI url = URI.create("http://localhost:8080/tasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(taskJson))
+                .build();
         // HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks");
-        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
+
         List<Task> tasksFromManager = taskManager.getTasksList();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        assertEquals("Test task1", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
     }
 
 //    @Test
