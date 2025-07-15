@@ -46,7 +46,9 @@ class HttpTaskManagerTasksTest {
         String taskJson = gson.toJson(task1);
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .uri(url)
+                .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(taskJson))
                 .build();
         // HTTP-клиент и запрос
