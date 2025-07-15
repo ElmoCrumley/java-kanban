@@ -1,4 +1,4 @@
-package com.yandex.app;
+package com.yandex.app.net;
 
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpServer;
@@ -7,6 +7,8 @@ import com.yandex.app.service.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class HttpTaskServer {
     TaskManager taskManager;
@@ -37,6 +39,9 @@ public class HttpTaskServer {
     }
 
     public static Gson getGson() {
-        return new Gson();
+        return new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
     }
 }
