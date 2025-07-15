@@ -1,4 +1,4 @@
-package com.yandex.app;
+package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;

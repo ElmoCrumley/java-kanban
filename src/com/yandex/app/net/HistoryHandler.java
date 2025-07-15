@@ -1,4 +1,4 @@
-package com.yandex.app;
+package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -7,19 +7,19 @@ import com.yandex.app.model.Task;
 import com.yandex.app.service.TaskManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     TaskManager taskManager;
 
-    public PrioritizedHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         Gson gson = new Gson();
-        ArrayList<Task> history = taskManager.getPrioritizedTasks();
+        List<Task> history = taskManager.getHistoryManager().getHistory();
 
         sendText(httpExchange, gson.toJson(history));
     }
