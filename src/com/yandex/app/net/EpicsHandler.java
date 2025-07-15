@@ -27,7 +27,7 @@ class EpicsHandler extends BaseHttpHandler implements HttpHandler {
         String id = path.split("/")[2];
         String subtasks = path.split("/")[3];
 
-        Gson gson = new Gson();
+        Gson gson = HttpTaskServer.getGson();
 
         try {
             switch (httpExchange.getRequestMethod()) {

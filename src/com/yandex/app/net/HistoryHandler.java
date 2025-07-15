@@ -18,7 +18,7 @@ class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        Gson gson = new Gson();
+        Gson gson = HttpTaskServer.getGson();
         List<Task> history = taskManager.getHistoryManager().getHistory();
 
         sendText(httpExchange, gson.toJson(history));

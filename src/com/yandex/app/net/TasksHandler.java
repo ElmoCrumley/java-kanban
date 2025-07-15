@@ -23,7 +23,7 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         String path = httpExchange.getRequestURI().getPath();
         String id = path.split("/")[2];
-        Gson gson = new Gson();
+        Gson gson = HttpTaskServer.getGson();
 
         try {
             switch (httpExchange.getRequestMethod()) {
