@@ -18,8 +18,8 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
     }
 
     @Override
-    public LocalDateTime read(JsonReader in) {
-        String str = in.toString();
+    public LocalDateTime read(JsonReader in) throws IOException {
+        String str = in.nextString();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         return LocalDateTime.parse(str, formatter);
