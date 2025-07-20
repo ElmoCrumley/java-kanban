@@ -21,20 +21,33 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
-        String id = path.split("/")[2];
-        Gson gson = HttpTaskServer.getGson();
-
         try {
+            String path = httpExchange.getRequestURI().getPath();
+            String id = null;
+
+            if (path.split("/").length == 3) {
+                id = path.split("/")[2];
+            }
+
+            Gson gson = HttpTaskServer.getGson();
+
             switch (httpExchange.getRequestMethod()) {
                 case "GET":
                     if (id != null) {
                         Task task = taskManager.getTask(Integer.parseInt(id));
+                        System.out.println(
+                                "Выполнена передача задачи: \n" + gson.toJson(task)
+                        );
                         sendText(httpExchange, gson.toJson(task));
                     } else {
                         ArrayList<Task> tasksList = taskManager.getTasksList();
+                        System.out.println("Выполнена передача списка задач: \n");
+                        for (Task task : tasksList) {
+                            System.out.println(task.getName() + task.getDescription());
+                        }
                         sendText(httpExchange, gson.toJson(tasksList));
                     }
+                    break;
                 case "POST":
                     // body
                     InputStream inputStream = httpExchange.getRequestBody();
@@ -43,23 +56,37 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
                     if (id != null) {
                         taskManager.updateTask(task);
+                        System.out.println(
+                                "Выполнено обновление задачи: \n" + gson.toJson(task)
+                        );
                         sendText(httpExchange, 201);
                     } else {
                         taskManager.createTask(task);
+                        System.out.println(
+                                "Выполнено создание задачи: \n" + gson.toJson(task)
+                        );
                         sendText(httpExchange, 201);
                     }
+                    break;
                 case "DELETE":
                     if (id != null) {
+                        System.out.println(
+                                "Выполнено удаление задачи: \n"
+                                        + gson.toJson(taskManager.getTask(Integer.parseInt(id)))
+                        );
                         taskManager.removeTask(Integer.parseInt(id));
                         sendText(httpExchange, 200);
                     }
+                    break;
                 default:
                     break;
             }
-        } catch (NotFoundException ignored) {
+        } catch (NotFoundException e) {
             sendNotFound(httpExchange);
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException e) {
             sendHasOverlaps(httpExchange);
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
         }
     }
 }
