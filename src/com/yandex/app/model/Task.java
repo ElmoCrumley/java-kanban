@@ -80,13 +80,15 @@ public class Task {
     }
 
     public boolean isIntersect(Task t2) {
-        if (duration.toMinutes() != 0) {
-            if (startTime.isBefore(t2.getStartTime())) {
-                return t2.getStartTime().isBefore(getEndTime());
-            } else if (startTime.isAfter(t2.getStartTime())) {
-                return t2.getEndTime().isAfter(getStartTime());
-            } else {
-                return true;
+        if (this.getId() != t2.getId()) {
+            if (duration.toMinutes() != 0) {
+                if (startTime.isBefore(t2.getStartTime())) {
+                    return t2.getStartTime().isBefore(getEndTime());
+                } else if (startTime.isAfter(t2.getStartTime())) {
+                    return t2.getEndTime().isAfter(getStartTime());
+                } else {
+                    return true;
+                }
             }
         }
         return false;
