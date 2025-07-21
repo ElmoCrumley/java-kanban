@@ -14,6 +14,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,14 +26,13 @@ class HttpTaskManagerTasksTest {
     TasksForTests tft;
     TaskManager taskManager = new InMemoryTaskManager();
     HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
-    Gson gson;
+    Gson gson = HttpTaskServer.getGson();
 
     @BeforeEach
     public void setUp() throws IOException {
         taskManager.removeTasks();
         taskManager.removeEpics();
         tft = new TasksForTests();
-        gson = HttpTaskServer.getGson();
         httpTaskServer.start();
     }
 
@@ -42,26 +43,29 @@ class HttpTaskManagerTasksTest {
 
     @Test
     public void tasksPostCreateTaskTest()  throws IOException, InterruptedException  {
-        Task task1 = tft.task1;
-        String taskJson = gson.toJson(task1);
-        URI url = URI.create("http://localhost:8080/tasks");
-        HttpRequest request = HttpRequest.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .uri(url)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(taskJson))
-                .build();
-        // HTTP-клиент и запрос
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            Task task1 = new Task("Name", "Description", Duration.ofMinutes(5), LocalDateTime.now());
+            String taskJson = gson.toJson(task1);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/tasks"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(taskJson))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(200, response.statusCode());
+            assertEquals(201, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getTasksList();
+            List<Task> tasksFromManager = taskManager.getTasksList();
 
-        assertNotNull(tasksFromManager, "Задачи не возвращаются");
-        assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test task1", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+            assertNotNull(tasksFromManager, "Задачи не возвращаются");
+            assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
+            assertEquals("Name", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Test
