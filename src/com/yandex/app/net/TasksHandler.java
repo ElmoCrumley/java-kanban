@@ -41,9 +41,10 @@ class TasksHandler extends BaseHttpHandler implements HttpHandler {
                         sendText(httpExchange, gson.toJson(task));
                     } else {
                         ArrayList<Task> tasksList = taskManager.getTasksList();
-                        System.out.println("Выполнена передача списка задач: \n");
+                        System.out.println("Выполнена передача списка задач:");
                         for (Task task : tasksList) {
-                            System.out.println(task.getName() + task.getDescription());
+                            System.out.println("\"name\": \"" + task.getName() + "\", "
+                                    + "\"description\": \"" + task.getDescription() + "\";");
                         }
                         sendText(httpExchange, gson.toJson(tasksList));
                     }
