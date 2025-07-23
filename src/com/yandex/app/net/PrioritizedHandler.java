@@ -19,8 +19,12 @@ class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         Gson gson = HttpTaskServer.getGson();
-        ArrayList<Task> history = taskManager.getPrioritizedTasks();
-
-        sendText(httpExchange, gson.toJson(history));
+        ArrayList<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+        System.out.println("Выполнена передача списка задач в порядке приоритетности:");
+        for (Task task : prioritizedTasks) {
+            System.out.println("\"name\": \"" + task.getName() + "\", "
+                    + "\"time interval\": \"" + task.getStartTime() + " - " + task.getEndTime() + "\";");
+        }
+        sendText(httpExchange, gson.toJson(prioritizedTasks));
     }
 }
