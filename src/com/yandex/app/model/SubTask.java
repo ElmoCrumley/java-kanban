@@ -8,8 +8,9 @@ public class SubTask extends Task {
 
     private int epicsId;
 
-    public SubTask(String name, String description, Duration duration, LocalDateTime startTime) {
+    public SubTask(String name, String description, Duration duration, LocalDateTime startTime, int epicsId) {
         super(name, description, duration, startTime);
+        this.epicsId = epicsId;
     }
 
     @Override
