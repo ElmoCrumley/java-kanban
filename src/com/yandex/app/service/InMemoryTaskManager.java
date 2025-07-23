@@ -190,14 +190,16 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubTask(SubTask subTask) throws RuntimeException {
         if (isNotIntersectAny(subTask)) {
             int subTaskId = subTask.getId();
-            Epic epic = epics.get(subTask.getEpicsId());
+            if (subTask.getEpicsId() != 0) {
+                Epic epic = epics.get(subTask.getEpicsId());
 
-            epic.getSubTasksList().remove(subTasks.get(subTaskId));
-            epic.addSubTaskToList(subTask);
-            epic.recalculateStatus();
-            epic.recalculateDuration();
-            epic.recalculateStartTime();
-            epic.recalculateEndTime();
+                epic.getSubTasksList().remove(subTasks.get(subTaskId));
+                epic.addSubTaskToList(subTask);
+                epic.recalculateStatus();
+                epic.recalculateDuration();
+                epic.recalculateStartTime();
+                epic.recalculateEndTime();
+            }
             subTasks.put(subTaskId, subTask);
         } else {
             throw new RuntimeException();
@@ -224,15 +226,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubTask(int id) {
         SubTask subTask = subTasks.get(id);
-        Epic epic = epics.get(subTask.getEpicsId());
+        if (subTask.getEpicsId() != 0) {
+            Epic epic = epics.get(subTask.getEpicsId());
 
-        epic.getSubTasksList().remove(subTask);
+            epic.getSubTasksList().remove(subTask);
+            epic.recalculateStatus();
+            epic.recalculateDuration();
+            epic.recalculateStartTime();
+            epic.recalculateEndTime();
+        }
         historyManager.remove(id);
         subTasks.remove(id);
-        epic.recalculateStatus();
-        epic.recalculateDuration();
-        epic.recalculateStartTime();
-        epic.recalculateEndTime();
     }
 
     @Override
