@@ -23,26 +23,47 @@ class EpicsHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
-        String id = path.split("/")[2];
-        String subtasks = path.split("/")[3];
-
-        Gson gson = HttpTaskServer.getGson();
-
         try {
+            String path = httpExchange.getRequestURI().getPath();
+            String id = null;
+            String subtasks = null;
+
+            if (path.split("/").length == 3) {
+                id = path.split("/")[2];
+            } else if (path.split("/").length == 4) {
+                id = path.split("/")[2];
+                subtasks = path.split("/")[3];
+            }
+
+            Gson gson = HttpTaskServer.getGson();
+
             switch (httpExchange.getRequestMethod()) {
                 case "GET":
                     if (id != null && subtasks != null) {
                         Epic epic = taskManager.getEpic(Integer.parseInt(id));
                         ArrayList<SubTask> subTasksList = InMemoryTaskManager.getEpicsSubTasksList(epic);
+                        System.out.println("Выполнена передача списка подзадач эпика " + epic.getId() + ':');
+                        for (SubTask subTask : subTasksList) {
+                            System.out.println("\"name\": \"" + subTask.getName() + "\", "
+                                    + "\"description\": \"" + subTask.getDescription() + "\";");
+                        }
                         sendText(httpExchange, gson.toJson(subTasksList));
                     } else if (id == null && subtasks == null) {
                         ArrayList<Epic> epicsList = taskManager.getEpicsList();
+                        System.out.println("Выполнена передача списка эпиков:");
+                        for (Epic epic : epicsList) {
+                            System.out.println("\"name\": \"" + epic.getName() + "\", "
+                                    + "\"description\": \"" + epic.getDescription() + "\";");
+                        }
                         sendText(httpExchange, gson.toJson(epicsList));
                     } else if (id != null) {
                         Epic epic = taskManager.getEpic(Integer.parseInt(id));
+                        System.out.println(
+                                "Выполнена передача эпика: \n" + gson.toJson(epic)
+                        );
                         sendText(httpExchange, gson.toJson(epic));
                     }
+                    break;
                 case "POST":
                     // body
                     InputStream inputStream = httpExchange.getRequestBody();
@@ -50,12 +71,21 @@ class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     Epic epic = gson.fromJson(jsonTask, Epic.class);
 
                     taskManager.createEpic(epic);
+                    System.out.println(
+                            "Выполнено создание эпика: \n" + gson.toJson(epic)
+                    );
                     sendText(httpExchange, 201);
+                    break;
                 case "DELETE":
                     if (id != null) {
-                        taskManager.removeSubTask(Integer.parseInt(id));
+                        taskManager.removeEpic(Integer.parseInt(id));
+                        System.out.println(
+                                "Выполнено удаление подзадачи: \n"
+                                        + gson.toJson(taskManager.getEpic(Integer.parseInt(id)))
+                        );
                         sendText(httpExchange, 200);
                     }
+                    break;
                 default:
                     break;
             }
