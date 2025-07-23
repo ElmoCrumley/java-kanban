@@ -25,10 +25,14 @@ public class EpicStatusesTest  {
 
     @BeforeEach
     void beforeEach() {
-        epic = new Epic("Test epic", "Test epic description", Duration.ofMinutes(0), LocalDateTime.now());
-        subTask1 = new SubTask("Test addNewSubTask1", "Test addNewSubTask1 description", Duration.ofMinutes(0), LocalDateTime.now());
-        subTask2 = new SubTask("Test addNewSubTask2", "Test addNewSubTask2 description", Duration.ofMinutes(0), LocalDateTime.now());
-        subTask3 = new SubTask("Test addNewSubTask3", "Test addNewSubTask3 description", Duration.ofMinutes(0), LocalDateTime.now());
+        epic = new Epic("Test epic", "Test epic description",
+                Duration.ofMinutes(0), LocalDateTime.now());
+        subTask1 = new SubTask("Test addNewSubTask1", "Test addNewSubTask1 description",
+                Duration.ofMinutes(0), LocalDateTime.now(), 0);
+        subTask2 = new SubTask("Test addNewSubTask2", "Test addNewSubTask2 description",
+                Duration.ofMinutes(0), LocalDateTime.now(), 0);
+        subTask3 = new SubTask("Test addNewSubTask3", "Test addNewSubTask3 description",
+                Duration.ofMinutes(0), LocalDateTime.now(), 0);
 
         subTasks = List.of(subTask1, subTask2, subTask3);
 
