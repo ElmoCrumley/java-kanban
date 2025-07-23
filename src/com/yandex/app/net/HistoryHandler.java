@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Task;
+import com.yandex.app.service.NotFoundException;
 import com.yandex.app.service.TaskManager;
 
 import java.io.IOException;
@@ -18,9 +19,21 @@ class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        Gson gson = HttpTaskServer.getGson();
-        List<Task> history = taskManager.getHistoryManager().getHistory();
-
-        sendText(httpExchange, gson.toJson(history));
+        try {
+            Gson gson = HttpTaskServer.getGson();
+            List<Task> history = taskManager.getHistoryManager().getHistory();
+            System.out.println("Выполнена передача истории:");
+            for (Task task : history) {
+                System.out.println("\"name\": \"" + task.getName() + "\", "
+                        + "\"description\": \"" + task.getDescription() + "\";");
+            }
+            sendText(httpExchange, gson.toJson(history));
+        } catch (NotFoundException e) {
+            sendNotFound(httpExchange);
+        } catch (RuntimeException e) {
+            sendHasOverlaps(httpExchange);
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
     }
 }
