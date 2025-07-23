@@ -182,7 +182,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public static Task fromString(String value) {
         String[] split = value.split(","); // id,type,name,status,description,epic
-        String id = split[7];
         switch (split[1]) {
             case "TASK":
                 Task task = new Task(
