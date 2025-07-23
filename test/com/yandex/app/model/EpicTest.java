@@ -44,7 +44,8 @@ class EpicTest {
     @Test
     void addNewTaskTest() {
         // Первая задача
-        task = new Task("Test addNewTask", "Test addNewTask description", Duration.ofMinutes(0), LocalDateTime.now());
+        task = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task);
 
@@ -61,7 +62,8 @@ class EpicTest {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
 
         // Вторая задача
-        task2 = new Task("Test addNewTask", "Test addNewTask description", Duration.ofMinutes(0), LocalDateTime.now());
+        task2 = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task2);
 
@@ -79,7 +81,8 @@ class EpicTest {
 
 
         // Третья задача
-        task3 = new Task("Test addNewTask", "Test addNewTask description", Duration.ofMinutes(0), LocalDateTime.now());
+        task3 = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task3);
 
