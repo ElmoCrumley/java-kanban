@@ -182,6 +182,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public static Task fromString(String value) {
         String[] split = value.split(","); // id,type,name,status,description,epic
+        String id = split[7];
         switch (split[1]) {
             case "TASK":
                 Task task = new Task(
@@ -210,12 +211,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         split[2],
                         split[4],
                         Duration.ofMinutes(Integer.parseInt(split[6])),
-                        LocalDateTime.parse(split[5])
+                        LocalDateTime.parse(split[5]),
+                        Integer.parseInt(split[7])
                 );
 
                 subTask.setId(Integer.parseInt(split[0]));
                 subTask.setStatus(Status.valueOf(split[3]));
-                subTask.setEpicsId(Integer.parseInt(split[7]));
                 return subTask;
             default:
                 return null;
