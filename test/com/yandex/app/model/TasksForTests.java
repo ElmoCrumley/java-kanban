@@ -11,15 +11,24 @@ public class TasksForTests {
     public Epic epic1 = new Epic("Test epic1", "Test epic1 description", Duration.ofMinutes(0), LocalDateTime.now());
     public Epic epic2 = new Epic("Test epic2", "Test epic2 description", Duration.ofMinutes(0), LocalDateTime.now());
     public Epic epic3 = new Epic("Test epic3", "Test epic3 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask1d1 = new SubTask("Test subTask1d1", "Test subTask1d1 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask1d2 = new SubTask("Test subTask1d2", "Test subTask1d2 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask1d3 = new SubTask("Test subTask1d3", "Test subTask1d3 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask2d1 = new SubTask("Test subTask2d1", "Test subTask2d1 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask2d2 = new SubTask("Test subTask2d2", "Test subTask2d2 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask2d3 = new SubTask("Test subTask2d3", "Test subTask2d3 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask3d1 = new SubTask("Test subTask3d1", "Test subTask3d1 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask3d2 = new SubTask("Test subTask3d2", "Test subTask3d2 description", Duration.ofMinutes(0), LocalDateTime.now());
-    public SubTask subTask3d3 = new SubTask("Test subTask3d3", "Test subTask3d3 description", Duration.ofMinutes(0), LocalDateTime.now());
+    public SubTask subTask1d1 = new SubTask("Test subTask1d1", "Test subTask1d1 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask1d2 = new SubTask("Test subTask1d2", "Test subTask1d2 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask1d3 = new SubTask("Test subTask1d3", "Test subTask1d3 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask2d1 = new SubTask("Test subTask2d1", "Test subTask2d1 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask2d2 = new SubTask("Test subTask2d2", "Test subTask2d2 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask2d3 = new SubTask("Test subTask2d3", "Test subTask2d3 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask3d1 = new SubTask("Test subTask3d1", "Test subTask3d1 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask3d2 = new SubTask("Test subTask3d2", "Test subTask3d2 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
+    public SubTask subTask3d3 = new SubTask("Test subTask3d3", "Test subTask3d3 description",
+            Duration.ofMinutes(0), LocalDateTime.now(), 0);
     public List<Task> tasks = List.of(task1, task2, task3);
     public List<Epic> epics = List.of(epic1, epic2, epic3);
     public List<SubTask> subTasks = List.of(
