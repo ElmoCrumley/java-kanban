@@ -5,12 +5,16 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 
 class BaseHttpHandler {
+    String header = "Content-Type";
+    String value = "application/json;charset=utf-8";
+    String requestRus = "Запрос ";
+
     protected void sendText(HttpExchange h, String text) throws IOException {
         try {
             byte[] resp = text.getBytes(); //StandardCharsets.UTF_8
-            h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            h.getResponseHeaders().add(header, value);
             h.sendResponseHeaders(200, resp.length);
-            System.out.println("Запрос "
+            System.out.println(requestRus
                     + h.getRequestMethod() + ' '
                     + h.getRequestURI().toString()
                     + ", код 200" + "\n");
@@ -22,7 +26,7 @@ class BaseHttpHandler {
     }
 
     protected void sendText(HttpExchange h, int code) throws IOException {
-        System.out.println("Запрос "
+        System.out.println(requestRus
                 + h.getRequestMethod() + ' '
                 + h.getRequestURI().toString() + ", код " + code + "\n");
         h.sendResponseHeaders(code, 0);
@@ -32,9 +36,9 @@ class BaseHttpHandler {
     protected void sendNotFound(HttpExchange h) throws IOException {
         try {
             byte[] resp = "Not Found".getBytes(); //StandardCharsets.UTF_8
-            h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            h.getResponseHeaders().add(header, value);
             h.sendResponseHeaders(404, resp.length);
-            System.out.println("Запрос "
+            System.out.println(requestRus
                     + h.getRequestMethod() + ' '
                     + h.getRequestURI().toString() + ", код 404" + "\n");
             h.getResponseBody().write(resp);
@@ -47,9 +51,9 @@ class BaseHttpHandler {
     protected void sendHasOverlaps(HttpExchange h) throws IOException {
         try {
             byte[] resp = "Not Acceptable".getBytes(); //StandardCharsets.UTF_8
-            h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            h.getResponseHeaders().add(header, value);
             h.sendResponseHeaders(406, resp.length);
-            System.out.println("Запрос "
+            System.out.println(requestRus
                     + h.getRequestMethod() + ' '
                     + h.getRequestURI().toString() + ", код 406" + "\n");
             h.getResponseBody().write(resp);
