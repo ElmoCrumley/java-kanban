@@ -79,7 +79,7 @@ class TasksHandler extends BaseHttpHandler {
                     }
                     break;
                 default:
-                    break;
+                    sendHasOverlaps(httpExchange);
             }
         } catch (NotFoundException e) {
             sendNotFound(httpExchange);

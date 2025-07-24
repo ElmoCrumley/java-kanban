@@ -86,7 +86,7 @@ class EpicsHandler extends BaseHttpHandler {
                     }
                     break;
                 default:
-                    break;
+                    sendHasOverlaps(httpExchange);
             }
         } catch (NotFoundException ignored) {
             sendNotFound(httpExchange);

@@ -18,21 +18,27 @@ class HistoryHandler extends BaseHttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        try {
-            Gson gson = HttpTaskServer.getGson();
-            List<Task> history = taskManager.getHistoryManager().getHistory();
-            System.out.println("Выполнена передача истории:");
-            for (Task task : history) {
-                System.out.println("\"name\": \"" + task.getName() + "\", "
-                        + "\"description\": \"" + task.getDescription() + "\";");
-            }
-            sendText(httpExchange, gson.toJson(history));
-        } catch (NotFoundException e) {
-            sendNotFound(httpExchange);
-        } catch (RuntimeException e) {
-            sendHasOverlaps(httpExchange);
-        } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+        switch (httpExchange.getRequestMethod()) {
+            case "GET":
+                try {
+                    Gson gson = HttpTaskServer.getGson();
+                    List<Task> history = taskManager.getHistoryManager().getHistory();
+                    System.out.println("Выполнена передача истории:");
+                    for (Task task : history) {
+                        System.out.println("\"name\": \"" + task.getName() + "\", "
+                                + "\"description\": \"" + task.getDescription() + "\";");
+                    }
+                    sendText(httpExchange, gson.toJson(history));
+                } catch (NotFoundException e) {
+                    sendNotFound(httpExchange);
+                } catch (RuntimeException e) {
+                    sendHasOverlaps(httpExchange);
+                } catch (Exception e) {
+                    System.out.println(e.getStackTrace());
+                }
+                break;
+            default:
+                sendHasOverlaps(httpExchange);
         }
     }
 }
