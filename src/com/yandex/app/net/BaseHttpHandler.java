@@ -49,6 +49,21 @@ abstract class BaseHttpHandler implements HttpHandler {
         }
     }
 
+    protected void notAllowed(HttpExchange h) throws IOException {
+        try {
+            byte[] resp = "Not allowed".getBytes(); //StandardCharsets.UTF_8
+            h.getResponseHeaders().add(header, value);
+            h.sendResponseHeaders(405, resp.length);
+            System.out.println(requestRus
+                    + h.getRequestMethod() + ' '
+                    + h.getRequestURI().toString() + ", код 405" + "\n");
+            h.getResponseBody().write(resp);
+            h.close();
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
     protected void sendHasOverlaps(HttpExchange h) throws IOException {
         try {
             byte[] resp = "Not Acceptable".getBytes(); //StandardCharsets.UTF_8
