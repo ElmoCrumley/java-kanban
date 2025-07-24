@@ -2,7 +2,6 @@ package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.service.InMemoryTaskManager;
@@ -14,7 +13,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-class EpicsHandler extends BaseHttpHandler implements HttpHandler {
+class EpicsHandler extends BaseHttpHandler {
     TaskManager taskManager;
 
     public EpicsHandler(TaskManager taskManager) {

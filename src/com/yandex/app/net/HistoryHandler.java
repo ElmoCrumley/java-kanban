@@ -2,7 +2,6 @@ package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.NotFoundException;
 import com.yandex.app.service.TaskManager;
@@ -10,7 +9,7 @@ import com.yandex.app.service.TaskManager;
 import java.io.IOException;
 import java.util.List;
 
-class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+class HistoryHandler extends BaseHttpHandler {
     TaskManager taskManager;
 
     public HistoryHandler(TaskManager taskManager) {

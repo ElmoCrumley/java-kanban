@@ -1,10 +1,11 @@
 package com.yandex.app.net;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 
-class BaseHttpHandler {
+abstract class BaseHttpHandler implements HttpHandler {
     String header = "Content-Type";
     String value = "application/json;charset=utf-8";
     String requestRus = "Запрос ";

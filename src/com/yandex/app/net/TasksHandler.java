@@ -2,7 +2,6 @@ package com.yandex.app.net;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.NotFoundException;
 import com.yandex.app.service.TaskManager;
@@ -12,7 +11,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-class TasksHandler extends BaseHttpHandler implements HttpHandler {
+class TasksHandler extends BaseHttpHandler {
     TaskManager taskManager;
 
     public TasksHandler(TaskManager taskManager) {
