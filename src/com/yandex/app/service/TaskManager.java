@@ -8,18 +8,18 @@ import java.util.ArrayList;
 
 public interface TaskManager {
     // Создание.
-    void createTask(Task task);
+    void createTask(Task task) throws RuntimeException;
 
-    void createEpic(Epic epic);
+    void createEpic(Epic epic) throws RuntimeException;
 
-    void createSubTask(SubTask subTask, int epicsId);
+    void createSubTask(SubTask subTask, int epicsId) throws RuntimeException;
 
     // Получение списка всех задач.
-    ArrayList<Task> getTasksList();
+    ArrayList<Task> getTasksList() throws NotFoundException;
 
-    ArrayList<Epic> getEpicsList();
+    ArrayList<Epic> getEpicsList() throws NotFoundException;
 
-    ArrayList<SubTask> getSubTasksList();
+    ArrayList<SubTask> getSubTasksList() throws NotFoundException;
 
     // Удаление всех задач.
     void removeTasks();
@@ -29,16 +29,16 @@ public interface TaskManager {
     void removeSubTasks();
 
     // Получение по идентификатору.
-    Task getTask(int id);
+    Task getTask(int id) throws NotFoundException;
 
-    Epic getEpic(int id);
+    Epic getEpic(int id) throws NotFoundException;
 
-    SubTask getSubTask(int id);
+    SubTask getSubTask(int id) throws NotFoundException;
 
     // Обновление.
-    void updateTask(Task task);
+    void updateTask(Task task) throws RuntimeException;
 
-    void updateSubTask(SubTask subTask);
+    void updateSubTask(SubTask subTask) throws RuntimeException;
 
     // Удаление по идентификатору.
     void removeTask(int id);
@@ -50,4 +50,6 @@ public interface TaskManager {
     void clearAllTasks();
 
     HistoryManager getHistoryManager();
+
+    ArrayList<Task> getPrioritizedTasks();
 }

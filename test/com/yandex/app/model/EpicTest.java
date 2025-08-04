@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +44,8 @@ class EpicTest {
     @Test
     void addNewTaskTest() {
         // Первая задача
-        task = new Task("Test addNewTask", "Test addNewTask description");
+        task = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task);
 
@@ -59,7 +62,8 @@ class EpicTest {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
 
         // Вторая задача
-        task2 = new Task("Test addNewTask", "Test addNewTask description");
+        task2 = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task2);
 
@@ -77,7 +81,8 @@ class EpicTest {
 
 
         // Третья задача
-        task3 = new Task("Test addNewTask", "Test addNewTask description");
+        task3 = new Task("Test addNewTask", "Test addNewTask description",
+                Duration.ofMinutes(0), LocalDateTime.now());
 
         taskManager.createTask(task3);
 

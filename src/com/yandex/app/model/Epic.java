@@ -2,16 +2,18 @@ package com.yandex.app.model;
 
 import com.yandex.app.service.Status;
 import com.yandex.app.service.Type;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private final ArrayList<SubTask> subTasksList = new ArrayList<>();
-    private LocalDateTime endTime;
+    private LocalDateTime endTime = getStartTime().plus(getDuration());
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(String name, String description, Duration duration, LocalDateTime startTime) {
+        super(name, description, duration, startTime);
     }
 
     @Override
@@ -19,11 +21,15 @@ public class Epic extends Task {
         return endTime;
     }
 
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     public void recalculateDuration() {
-        if (super.getDuration() != null) {
-            super.setDuration(0);
+        if (super.getDuration().toMinutes() != 0) {
+            super.setDuration(Duration.ofMinutes(0));
             for (SubTask subTask : subTasksList) {
-                if (subTask.getDuration() != null) {
+                if (subTask.getDuration().toMinutes() != 0) {
                     super.getDuration().plus(subTask.getDuration());
                 }
             }
@@ -43,7 +49,7 @@ public class Epic extends Task {
 
     public void recalculateEndTime() {
         for (SubTask subTask : subTasksList) {
-            if (subTask.getStartTime() != null && subTask.getDuration() != null) {
+            if (subTask.getStartTime() != null && subTask.getDuration().toMinutes() != 0) {
                 LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
                 if (subTaskEndTime.isAfter(endTime)) {
                     endTime = subTaskEndTime;

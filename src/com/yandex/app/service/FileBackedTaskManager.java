@@ -5,7 +5,9 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager  {
     final File autoSave;
@@ -82,17 +84,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     // Запись в файл.
     private void save() {
+        List<Task> tasks = null;
+        List<Epic> epics = null;
+        List<SubTask> subTasks = null;
+
+        try {
+            tasks = super.getTasksList();
+            epics = super.getEpicsList();
+            subTasks = super.getSubTasksList();
+        } catch (NotFoundException ignored) {
+
+        }
+
         try (Writer bufferedWriter = new BufferedWriter(new FileWriter(autoSave.getAbsoluteFile()))) {
-            for (Task task : super.getTasksList()) {
-                bufferedWriter.write(toString(task) + "\n");
+            if (tasks != null) {
+                for (Task task : super.getTasksList()) {
+                    bufferedWriter.write(toString(task) + "\n");
+                }
             }
 
-            for (Epic epic : super.getEpicsList()) {
-                bufferedWriter.write(toString(epic) + "\n");
+            if (epics != null) {
+                for (Epic epic : super.getEpicsList()) {
+                    bufferedWriter.write(toString(epic) + "\n");
+                }
             }
 
-            for (SubTask subTask : super.getSubTasksList()) {
-                bufferedWriter.write(toString(subTask) + "\n");
+            if (subTasks != null) {
+                for (SubTask subTask : super.getSubTasksList()) {
+                    bufferedWriter.write(toString(subTask) + "\n");
+                }
             }
         } catch (IOException e) {
             throw new ManagerSaveException(e);
@@ -106,7 +126,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 + task.getStatus() + ","
                 + task.getDescription() + ","
                 + task.getStartTime() + ","
-                + task.getDuration();
+                + task.getDuration().toMinutes();
     }
 
     private String toString(SubTask subTask) {
@@ -116,7 +136,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 + subTask.getStatus() + ","
                 + subTask.getDescription() + ","
                 + subTask.getStartTime() + ","
-                + subTask.getDuration() + ","
+                + subTask.getDuration().toMinutes() + ","
                 + subTask.getEpicsId();
     }
 
@@ -164,38 +184,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String[] split = value.split(","); // id,type,name,status,description,epic
         switch (split[1]) {
             case "TASK":
-                Task task = new Task(split[2], split[4]);
+                Task task = new Task(
+                        split[2],
+                        split[4],
+                        Duration.ofMinutes(Integer.parseInt(split[6])),
+                        LocalDateTime.parse(split[5])
+                );
+
                 task.setId(Integer.parseInt(split[0]));
                 task.setStatus(Status.valueOf(split[3]));
-                if (!split[5].equals("null")) {
-                    task.setStartTime(LocalDateTime.parse(split[5]));
-                }
-                if (!split[6].equals("null")) {
-                    task.setDuration(Integer.parseInt(split[6]));
-                }
                 return task;
             case "EPIC":
-                Epic epic = new Epic(split[2], split[4]);
+                Epic epic = new Epic(
+                        split[2],
+                        split[4],
+                        Duration.ofMinutes(Integer.parseInt(split[6])),
+                        LocalDateTime.parse(split[5])
+                );
+
                 epic.setId(Integer.parseInt(split[0]));
                 epic.setStatus(Status.valueOf(split[3]));
-                if (!split[5].equals("null")) {
-                    epic.setStartTime(LocalDateTime.parse(split[5]));
-                }
-                if (!split[6].equals("null")) {
-                    epic.setDuration(Integer.parseInt(split[6]));
-                }
                 return epic;
             case "SUBTASK":
-                SubTask subTask = new SubTask(split[2], split[4]);
+                SubTask subTask = new SubTask(
+                        split[2],
+                        split[4],
+                        Duration.ofMinutes(Integer.parseInt(split[6])),
+                        LocalDateTime.parse(split[5]),
+                        Integer.parseInt(split[7])
+                );
+
                 subTask.setId(Integer.parseInt(split[0]));
                 subTask.setStatus(Status.valueOf(split[3]));
-                if (!split[5].equals("null")) {
-                    subTask.setStartTime(LocalDateTime.parse(split[5]));
-                }
-                if (!split[6].equals("null")) {
-                    subTask.setDuration(Integer.parseInt(split[6]));
-                }
-                subTask.setEpicsId(Integer.parseInt(split[7]));
                 return subTask;
             default:
                 return null;

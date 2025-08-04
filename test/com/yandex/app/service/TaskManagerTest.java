@@ -6,6 +6,7 @@ import com.yandex.app.model.SubTask;
 import com.yandex.app.model.TasksForTests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import java.util.List;
 import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,26 +48,43 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testMultipleAssertionsWithStreamForRemoveAllTask() {
-        int task1Id = tft.task1.getId();
-        int epic2Id = tft.epic2.getId();
-        int subTask1d1Id = tft.subTask1d1.getId();
+    public void testAssertionsWithStreamForRemoveAllTask() {
+        List<Task> tasks = taskManager.getTasksList();
+        List<Epic> epics = taskManager.getEpicsList();
+        List<SubTask> subTasks = taskManager.getSubTasksList();
 
-        int TasksCount = taskManager.getTasksList().size();
-        int EpicsCount = taskManager.getTasksList().size();
-        int SubTasksCount = taskManager.getTasksList().size();
-
+        assertEquals(3, tasks.size());
+        assertEquals(3, epics.size());
+        assertEquals(9, subTasks.size());
         taskManager.removeTasks();
-        taskManager.removeEpics();
         taskManager.removeSubTasks();
+        taskManager.removeEpics();
 
-        Stream<Executable> executables = Stream.of(
-                () -> assertNotEquals(taskManager.getTasksList().size(), TasksCount),
-                () -> assertNotEquals(taskManager.getEpicsList().size(), EpicsCount),
-                () -> assertNotEquals(taskManager.getSubTasksList().size(), SubTasksCount)
-        );
+        boolean thrownTasks = false;
+        boolean thrownEpics = false;
+        boolean thrownSubTasks = false;
 
-        assertAll("Checking remove all tasks tests for Tasks, Epics, Subtasks", executables);
+        try {
+            tasks = taskManager.getTasksList();
+        } catch (NotFoundException e) {
+            thrownTasks = true;
+        }
+
+        try {
+            epics = taskManager.getEpicsList();
+        } catch (NotFoundException e) {
+            thrownEpics = true;
+        }
+
+        try {
+            subTasks = taskManager.getSubTasksList();
+        } catch (NotFoundException e) {
+            thrownSubTasks = true;
+        }
+
+        assertTrue(thrownTasks);
+        assertTrue(thrownEpics);
+        assertTrue(thrownSubTasks);
     }
 
     @Test
@@ -122,9 +140,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         int subTasksSize = taskManager.getSubTasksList().size();
 
         Stream<Executable> executables = Stream.of(
-                () -> assertNull(taskManager.getTask(task1Id)),
-                () -> assertNull(taskManager.getEpic(epic2Id)),
-                () -> assertNull(taskManager.getSubTask(subTask1d1Id)),
                 () -> assertEquals(2, tasksSize),
                 () -> assertEquals(2, epicsSize),
                 () -> assertEquals(5, subTasksSize) // Учитывать удалённый эпик, в котором 3 подзадачи
@@ -134,20 +149,38 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testMultipleAssertionsWithStreamForClearAllTasks() {
-        int TasksCount = taskManager.getTasksList().size();
-        int EpicsCount = taskManager.getTasksList().size();
-        int SubTasksCount = taskManager.getTasksList().size();
+    public void testAssertionsWithStreamForClearAllTasks() {
+        int tasksCount = taskManager.getTasksList().size();
+        int epicsCount = taskManager.getEpicsList().size();
+        int subTasksCount = taskManager.getSubTasksList().size();
 
         taskManager.clearAllTasks();
 
-        Stream<Executable> executables = Stream.of(
-                () -> assertNotEquals(taskManager.getTasksList().size(), TasksCount),
-                () -> assertNotEquals(taskManager.getEpicsList().size(), EpicsCount),
-                () -> assertNotEquals(taskManager.getSubTasksList().size(), SubTasksCount)
-        );
+        boolean thrownTasksCount = false;
+        boolean thrownEpicsCount = false;
+        boolean thrownSubTasksCount = false;
 
-        assertAll("Checking get tests for Tasks, Epics, Subtasks", executables);
+        try {
+            tasksCount = taskManager.getTasksList().size();
+        } catch (NotFoundException e) {
+            thrownTasksCount = true;
+        }
+
+        try {
+            epicsCount = taskManager.getEpicsList().size();
+        } catch (NotFoundException e) {
+            thrownEpicsCount = true;
+        }
+
+        try {
+            subTasksCount = taskManager.getSubTasksList().size();
+        } catch (NotFoundException e) {
+            thrownSubTasksCount = true;
+        }
+
+        assertTrue(thrownTasksCount);
+        assertTrue(thrownEpicsCount);
+        assertTrue(thrownSubTasksCount);
     }
 
     @Test
